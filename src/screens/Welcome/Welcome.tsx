@@ -9,7 +9,7 @@ const WelcomeScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
 
         <Image
             style={styles.logo}
-            source={require('../../assets/logo_transparent1.png')}
+            source={require('../../../assets/logo_transparent1.png')}
         />
 
         <View style={styles.buttons}>
