@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Modal, TextInput, Button, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { styles } from './HomeStyle'; // Import styles from the styles.js file
 import { getAuth, signOut } from 'firebase/auth';
 import { useAuthentication } from '../../utils/hooks/useAuthentification';
+import { Weekend } from '../../models/weekend';
+
 
 const auth = getAuth();
 
@@ -14,6 +16,27 @@ const HomeScreen = () => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [weekendName, setWeekendName] = useState('');
   const [responseMessage, setResponseMessage] = useState('');
+  const [myWeekends, setmyWeekends] = useState<Weekend[]>([]);
+
+
+  useEffect(() => {
+    if(user)
+      getWeekends().catch(console.error);
+  }, [user]);
+
+  const getWeekends = async () => {
+    console.log("TEST");
+    console.log(user?.email);
+    const response = await fetch('http://192.168.31.97:3000/getWeekends', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email: user!.email }),
+    });
+    const data = await response.json();
+    setmyWeekends(data)
+  }
 
   const handleWeekendPress = () => {
     setActiveTab('weekends');
@@ -47,12 +70,13 @@ const HomeScreen = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name: weekendName }),
+        body: JSON.stringify({ name: weekendName, creator: user!.email }),
       });
 
       const data = await response.json();
       setResponseMessage(JSON.stringify(data));
       setModalVisible(false);
+      getWeekends();
     } catch (error) {
       console.error(error);
       Alert.alert('Error', 'An error occurred while creating the weekend.');
@@ -61,17 +85,35 @@ const HomeScreen = () => {
 
   return (
     <View style={styles.container}>
-            {/* Profile Content */}
-            {activeTab === 'profile' && (
+        {/* Profile Content */}
+        {activeTab === 'profile' && (
           <View style={styles.profileContainer}>
             <Text style={styles.profileEmail}>{user?.email}</Text>
             <Button title="Logout" onPress={() => signOut(auth)} />
           </View>
         )}
+
+        {/* Response Message */}
+        {responseMessage ? (
+          <View style={styles.responseContainer}>
+            <Text>{responseMessage}</Text>
+          </View>
+        ) : null}
+
+        {/* weekends list */}
+        {activeTab === 'weekends' && myWeekends ? (
+          <View style={styles.profileContainer}>
+          {myWeekends.map((weekend) => (
+            <Text key={weekend.id}>{weekend.name}</Text>
+          ))}
+        </View>
+        ) : null}
+        
+
+
+
+      {/* Tabs and Modal */}
       <View style={styles.content}>
-
-
-
         {/* My Weekends Tab */}
         <TouchableOpacity
           style={[styles.tabButton]}
@@ -125,15 +167,6 @@ const HomeScreen = () => {
           </View>
         </View>
       </Modal>
-
-      {/* Response Message */}
-      {responseMessage ? (
-        <View style={styles.responseContainer}>
-          <Text>{responseMessage}</Text>
-        </View>
-      ) : null}
-
-      
     </View>
 
     
