@@ -18,6 +18,8 @@ type HomeProps = {
 
 const auth = getAuth();
 
+const url = 'http://192.168.0.16:3000'
+
 const HomeScreen = ({route, navigation}: HomeProps) => {
   const { user } = useAuthentication();
   
@@ -35,7 +37,7 @@ const HomeScreen = ({route, navigation}: HomeProps) => {
   const getWeekends = async () => {
     console.log("TEST");
     console.log(user?.email);
-    const response = await fetch('http://192.168.31.97:3000/getWeekends', {
+    const response = await fetch(url + '/getWeekends', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -75,7 +77,7 @@ const HomeScreen = ({route, navigation}: HomeProps) => {
     }
 
     try {
-      const response = await fetch('http://192.168.31.97:3000/createWeekend', {
+      const response = await fetch(url + '/createWeekend', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

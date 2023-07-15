@@ -5,6 +5,8 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../navigation/userStack';
 import { RouteProp } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
+import UserCard from '../../components/UserCard/UserCard';
+import { FlatList } from 'react-native-gesture-handler';
 
 type WeekendScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Weekend'>;
 type WeekendProps = {
@@ -17,8 +19,15 @@ const WeekendScreen = ({route, navigation}: WeekendProps) => {
   return (
     <View style={styles.container}>
       <Text>{route.params.weekend.name}</Text>
-      <Text>{route.params.weekend.participants}</Text>
+      <FlatList
+            data={route.params.weekend.participants}
+            renderItem={({ item }) => (
+              <UserCard user={item} />
+            )}
+          />
       <Text>{route.params.weekend.date}</Text>
+      <Text>{route.params.weekend.sharing_code}</Text>
+
       {/* Display other details of the selected weekend */}
       {/* e.g., address, date, participants */}
 

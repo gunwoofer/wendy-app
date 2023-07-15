@@ -3,6 +3,7 @@ export interface Weekend {
     name: string;
     address: string | null;
     date: string;
-    participants: string;
+    participants: string[];
+    sharing_code: string;
 }
   
