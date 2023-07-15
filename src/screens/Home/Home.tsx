@@ -33,7 +33,7 @@ const HomeScreen = ({route, navigation}: HomeProps) => {
   }, [user]);
 
   const getWeekends = async () => {
-    console.log("TEST");
+    console.log("Wassim test : " );
     console.log(user?.email);
     const response = await fetch('http://192.168.31.97:3000/getWeekends', {
       method: 'POST',

@@ -1,11 +1,25 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity  } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, Image  } from 'react-native';
 import { Weekend } from '../../models/weekend';
+import { NavigationContainer } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../../navigation/userStack';
 import { RouteProp } from '@react-navigation/native';
 import { Ionicons, MaterialIcons, MaterialCommunityIcons   } from '@expo/vector-icons';
 import { styles } from './WeekendScreenStyle';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Icon } from 'react-native-elements';
+import HomeScreen from '../Home/Home';
+import GeneralScreen from './GeneralScreen/GeneralScreen';
+import TransportScreen from './TransportScreen/TransportScreen';
+import GuestsScreen from './GuestsScreen/GuestScreen';
+import { RootStackParamList } from '../../navigation/userStack';
+
+export type WeekendStackParamList = {
+  General: { weekend: Weekend },
+  Guest : { weekend: Weekend },
+  Transport : { weekend: Weekend };
+};
+const Tab = createBottomTabNavigator<WeekendStackParamList>();
 
 type WeekendScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Weekend'>;
 type WeekendProps = {
@@ -14,44 +28,54 @@ type WeekendProps = {
 };
 
 const WeekendScreen = ({route, navigation}: WeekendProps) => {
+  // const [name, setName] = useState('');
+  // const [date, setDate] = useState('');
+  // const [address, setAddress] = useState('');
+  // const [tricountLink, setTricountLink] = useState('');
+  // const [airbnbLink, setAirbnbLink] = useState('');
+
+  const saveReservation = () => {
+    // Implement your save logic here
+    // You can use the values of name, date, address, tricountLink, airbnbLink
+  };
 
   return (
-    <View style={styles.container}>
-      <Text>{route.params.weekend.name}</Text>
-      <Text>{route.params.weekend.participants}</Text>
-      <Text>{route.params.weekend.date}</Text>
-      {/* Display other details of the selected weekend */}
-      {/* e.g., address, date, participants */}
-
-      {/* Tabs */}
-      <View style={styles.content}>
-        {/* Weekend info */}
-        <TouchableOpacity
-          style={[styles.tabButton]}
-        >
-          <Ionicons name="calendar-outline" size={24} color={'#000'} />
-          <Text style={[styles.tabText, styles.activeTabText]}>General</Text>
-        </TouchableOpacity>
-
-        {/* Transport */}
-        <TouchableOpacity
-          style={[styles.tabButton]}
-        >
-          <Ionicons name="car" size={24} color={'#000'} />
-          <Text style={[styles.tabText, styles.activeTabText]}>Transport</Text>
-        </TouchableOpacity>
-
-        {/* Participants */}
-        <TouchableOpacity
-          style={[styles.tabButton]}
-        >
-          <MaterialCommunityIcons name="account-group" size={24} color={'#000'} />
-          <Text style={[styles.tabText, styles.activeTabText]}>Guests</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+        <Tab.Navigator initialRouteName='General'
+        screenOptions={{headerShown:false}}> 
+            <Tab.Screen 
+                name='General' 
+                initialParams={{ weekend : route.params.weekend }}
+                component={GeneralScreen}
+                options={{ 
+                    tabBarIcon: ({ color, size }) => (
+                        <MaterialCommunityIcons name="card-text" size={24} color={'#000'}  />
+                    ),
+                }}
+            />
+            <Tab.Screen 
+                name='Guest'
+                initialParams={{ weekend : route.params.weekend }}
+                component={TransportScreen} 
+                options={{ 
+                    tabBarIcon: ({ color, size }) => (
+                        <MaterialCommunityIcons name="account-group" size={24} color={'#000'} />
+                    ),
+                }}
+            />
+            <Tab.Screen 
+                name='Transport'
+                initialParams={{ weekend : route.params.weekend }}
+                component={GuestsScreen} 
+                options={{ 
+                    tabBarIcon: ({ color, size }) => (
+                        <Ionicons name="car" size={24} color={'#000'}/>
+                    ),
+                }}
+            />
+        </Tab.Navigator>
   );
 };
+
 
 export default WeekendScreen;
 
