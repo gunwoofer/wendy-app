@@ -1,15 +1,24 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Modal, TextInput, Button, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Modal, TextInput, Button, Alert, FlatList } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { styles } from './HomeStyle'; // Import styles from the styles.js file
 import { getAuth, signOut } from 'firebase/auth';
 import { useAuthentication } from '../../utils/hooks/useAuthentification';
 import { Weekend } from '../../models/weekend';
+import WeekendCard from '../../components/WeekendCard/WeekendCard';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../../navigation/userStack';
+import { RouteProp } from '@react-navigation/native';
 
+type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>;
+type HomeProps = {
+    navigation: HomeScreenNavigationProp;
+    route: RouteProp<RootStackParamList, 'Home'>;
+};
 
 const auth = getAuth();
 
-const HomeScreen = () => {
+const HomeScreen = ({route, navigation}: HomeProps) => {
   const { user } = useAuthentication();
   
   const [activeTab, setActiveTab] = useState('weekends');
@@ -17,7 +26,6 @@ const HomeScreen = () => {
   const [weekendName, setWeekendName] = useState('');
   const [responseMessage, setResponseMessage] = useState('');
   const [myWeekends, setmyWeekends] = useState<Weekend[]>([]);
-
 
   useEffect(() => {
     if(user)
@@ -40,12 +48,10 @@ const HomeScreen = () => {
 
   const handleWeekendPress = () => {
     setActiveTab('weekends');
-    // Function triggered when "My Weekends" tab is pressed
   };
 
   const handleProfilePress = () => {
     setActiveTab('profile');
-    // Function triggered when "Profile" tab is pressed
   };
 
   const handleAddPress = () => {
@@ -56,6 +62,10 @@ const HomeScreen = () => {
     setModalVisible(false);
     setWeekendName('');
     setResponseMessage('');
+  };
+
+  const handleCardPress = (weekend: Weekend) => {
+    navigation.navigate('Weekend', {weekend: weekend});
   };
 
   const handleCreateWeekend = async () => {
@@ -102,17 +112,19 @@ const HomeScreen = () => {
 
         {/* weekends list */}
         {activeTab === 'weekends' && myWeekends ? (
-          <View style={styles.profileContainer}>
-          {myWeekends.map((weekend) => (
-            <Text key={weekend.id}>{weekend.name}</Text>
-          ))}
+        <View style={styles.container}>
+          <FlatList
+            data={myWeekends}
+            renderItem={({ item }) => (
+              <WeekendCard weekend={item} onPress={handleCardPress} />
+            )}
+            keyExtractor={(item) => item.id.toString()}
+          />
         </View>
         ) : null}
         
-
-
-
-      {/* Tabs and Modal */}
+        
+      {/* Tabs */}
       <View style={styles.content}>
         {/* My Weekends Tab */}
         <TouchableOpacity
