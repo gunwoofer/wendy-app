@@ -25,8 +25,8 @@ const WeekendScreen = ({route, navigation}: WeekendProps) => {
               <UserCard user={item} />
             )}
           />
-      <Text>{route.params.weekend.date}</Text>
-      <Text>{route.params.weekend.sharing_code}</Text>
+      <Text>date de creation: {route.params.weekend.date}</Text>
+      <Text>Sharing code: {route.params.weekend.sharing_code}</Text>
 
       {/* Display other details of the selected weekend */}
       {/* e.g., address, date, participants */}
