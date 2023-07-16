@@ -19,6 +19,11 @@ const GeneralScreen = ({route, navigation}: GeneralProps) => {
   const [tricountLink, setTricountLink] = useState('');
   const [airbnbLink, setAirbnbLink] = useState('');
     
+  const saveReservation = () => {
+    // Implement your save logic here
+    // You can use the values of name, date, address, tricountLink, airbnbLink
+  };
+  
   return (
     <View style = {styles.container}>
         <Image

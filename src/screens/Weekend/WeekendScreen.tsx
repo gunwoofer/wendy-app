@@ -9,9 +9,9 @@ import { styles } from './WeekendScreenStyle';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Icon } from 'react-native-elements';
 import HomeScreen from '../Home/Home';
-import GeneralScreen from './GeneralScreen/GeneralScreen';
-import TransportScreen from './TransportScreen/TransportScreen';
-import GuestsScreen from './GuestsScreen/GuestScreen';
+import GeneralScreen from './General/GeneralScreen';
+import TransportScreen from './Transport/TransportScreen';
+import GuestsScreen from './Guests/GuestScreen';
 import { RootStackParamList } from '../../navigation/userStack';
 
 export type WeekendStackParamList = {
@@ -28,16 +28,8 @@ type WeekendProps = {
 };
 
 const WeekendScreen = ({route, navigation}: WeekendProps) => {
-  // const [name, setName] = useState('');
-  // const [date, setDate] = useState('');
-  // const [address, setAddress] = useState('');
-  // const [tricountLink, setTricountLink] = useState('');
-  // const [airbnbLink, setAirbnbLink] = useState('');
 
-  const saveReservation = () => {
-    // Implement your save logic here
-    // You can use the values of name, date, address, tricountLink, airbnbLink
-  };
+
 
   return (
         <Tab.Navigator initialRouteName='General'
@@ -55,7 +47,7 @@ const WeekendScreen = ({route, navigation}: WeekendProps) => {
             <Tab.Screen 
                 name='Guest'
                 initialParams={{ weekend : route.params.weekend }}
-                component={TransportScreen} 
+                component={GuestsScreen} 
                 options={{ 
                     tabBarIcon: ({ color, size }) => (
                         <MaterialCommunityIcons name="account-group" size={24} color={'#000'} />
@@ -65,7 +57,7 @@ const WeekendScreen = ({route, navigation}: WeekendProps) => {
             <Tab.Screen 
                 name='Transport'
                 initialParams={{ weekend : route.params.weekend }}
-                component={GuestsScreen} 
+                component={TransportScreen} 
                 options={{ 
                     tabBarIcon: ({ color, size }) => (
                         <Ionicons name="car" size={24} color={'#000'}/>
