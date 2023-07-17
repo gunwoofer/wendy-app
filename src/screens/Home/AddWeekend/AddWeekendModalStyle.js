@@ -9,16 +9,14 @@ export const styles = StyleSheet.create({
     padding: 22,
     justifyContent: 'center',
     alignItems: 'center',
-    borderTopRightRadius: 17,
-    borderTopLeftRadius: 17,
+    borderRadius: 17
   },
   contentTitle: {
     fontSize: 20,
     marginBottom: 12,
   },
   contentView: {
-    justifyContent: 'flex-end',
-    margin: 0,
+    flex: 1
   },
 	buttonStyle: {
     height: 60,
