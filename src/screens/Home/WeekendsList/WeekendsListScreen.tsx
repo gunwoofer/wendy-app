@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Button, FlatList, Modal, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, StyleSheet, Button, FlatList, Modal, TextInput, TouchableOpacity, Alert, RefreshControl } from 'react-native';
 import { styles } from './WeekendsListScreenStyle';
 import WeekendCard from '../../../components/WeekendCard/WeekendCard';
 import { useAuthentication } from '../../../utils/hooks/useAuthentification';
@@ -23,7 +23,7 @@ const WeekendsListScreen = ({route, navigation}: WeekendsListProps) => {
   const { user } = useAuthentication();
   
   const [myWeekends, setmyWeekends] = useState<Weekend[]>([]);
-  const [, refreshState] = useState('')
+  const [refreshing, setRefreshing] = useState(false);
   
   useFocusEffect(
     React.useCallback(() => {
@@ -42,6 +42,14 @@ const WeekendsListScreen = ({route, navigation}: WeekendsListProps) => {
       getWeekends().catch(console.error);
   }, [user]);
 
+
+  const onRefresh = () => {
+    if (user) {
+      setRefreshing(true);
+      getWeekends();
+    }
+  }
+
   const getWeekends = async () => {
     console.log("Wassim test : " );
     console.log(user?.email);
@@ -53,7 +61,8 @@ const WeekendsListScreen = ({route, navigation}: WeekendsListProps) => {
       body: JSON.stringify({ email: user!.email }),
     });
     const data = await response.json();
-    setmyWeekends(data)
+    setmyWeekends(data);
+    setRefreshing(false);
   }
 
 
@@ -74,6 +83,7 @@ const WeekendsListScreen = ({route, navigation}: WeekendsListProps) => {
               <WeekendCard weekend={item} onPress={handleCardPress} />
             )}
             keyExtractor={(item) => item.id.toString()}
+            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}
           />
         </View>
         ) : null}
