@@ -32,6 +32,7 @@ const AddWeekendModal = () => {
       });
       const weekendCreated: Weekend = await response.json();
       setModalVisible(false);
+      setName('')
       RootNavigation.navigate('Weekend', {weekend: weekendCreated})
 
     } catch (error) {
@@ -42,6 +43,8 @@ const AddWeekendModal = () => {
   const handleJoin = () => {
     // Handle join logic
     console.log('Join:', code);
+    setCode('')
+    setModalVisible(false);
   };
 
   return (

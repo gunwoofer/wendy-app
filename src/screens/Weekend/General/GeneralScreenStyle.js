@@ -6,11 +6,11 @@ export const styles = StyleSheet.create({
         padding:150
     },
     container: {
-      padding:15,
+      padding:5,
       flex: 1,
       alignItems: 'center',
       backgroundColor: '#f5f5f5',
-      justifyContent: 'flex-end'
+      justifyContent: 'flex'
     },
     image: {
       width: '100%',

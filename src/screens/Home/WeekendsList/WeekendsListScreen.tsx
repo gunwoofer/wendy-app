@@ -28,12 +28,14 @@ const WeekendsListScreen = ({route, navigation}: WeekendsListProps) => {
   useFocusEffect(
     React.useCallback(() => {
       console.log('Screen was focused');
-      if(user)
+      if(user) {
+        console.log("Screen focus and user detected");
         getWeekends()
+      }
       return () => {
         console.log('Screen was unfocused');
       };
-    }, [])
+    }, [user])
   );
   
   useEffect(() => {
