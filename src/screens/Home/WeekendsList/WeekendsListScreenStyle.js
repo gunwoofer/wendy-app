@@ -4,8 +4,6 @@ export const styles = StyleSheet.create({
     container: {
       flex: 1,
       backgroundColor: '#F5F5F5',
-      alignItems: 'center',
-      justifyContent: 'flex-end',
     },
     content: {
       flexDirection: 'row',
@@ -73,26 +71,7 @@ export const styles = StyleSheet.create({
         justifyContent: 'center',
       },
     profileEmail: {
-      fontSize: 16,
-      marginBottom: 16,
-    },
-    navigatorContainer: {
-      position: 'absolute',
-      bottom: 0,
-      left: 0,
-      right: 0,
-      // SHADOW
-      shadowColor: "#000",
-      shadowOffset: {
-        width: 0,
-        height: 1,
-      },
-      shadowOpacity: 0.22,
-      shadowRadius: 2.22,
-    },
-    navigator: {
-      borderTopWidth: 0,
-      backgroundColor: 'transparent',
-      elevation: 30
+    fontSize: 16,
+    marginBottom: 16,
     },
   });
