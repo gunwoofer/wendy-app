@@ -10,6 +10,7 @@ import { HomeStackParamList } from '../Home';
 import { Ionicons, FontAwesome } from '@expo/vector-icons';
 import * as RootNavigation from '../../../navigation/RootNavigation';
 import { useFocusEffect } from '@react-navigation/native';
+import { SERVER_IP } from '@env'
 
 type WeekendsListScreenNavigationProp = StackNavigationProp<HomeStackParamList, 'WeekendsList'>;
 type WeekendsListProps = {
@@ -53,9 +54,9 @@ const WeekendsListScreen = ({route, navigation}: WeekendsListProps) => {
   }
 
   const getWeekends = async () => {
-    console.log("Wassim test : " );
     console.log(user?.email);
-    const response = await fetch('http://192.168.31.97:3000/getWeekends', {
+    console.log(process.env.SERVER_IP);
+    const response = await fetch(SERVER_IP + '/getWeekends', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

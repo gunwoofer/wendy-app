@@ -7,6 +7,7 @@ import { styles } from './AddWeekendModalStyle';
 import { useAuthentication } from '../../../utils/hooks/useAuthentification';
 import { Weekend } from '../../../models/weekend';
 import * as RootNavigation from '../../../navigation/RootNavigation';
+import { SERVER_IP } from '@env';
 
 const AddWeekendModal = () => {
 
@@ -23,7 +24,7 @@ const AddWeekendModal = () => {
 
   const handleCreate = async () => {
     try {
-      const response = await fetch('http://192.168.31.97:3000/createWeekend', {
+      const response = await fetch(SERVER_IP + '/createWeekend', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
