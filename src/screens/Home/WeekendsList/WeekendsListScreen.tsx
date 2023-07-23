@@ -11,6 +11,8 @@ import { Ionicons, FontAwesome } from '@expo/vector-icons';
 import * as RootNavigation from '../../../navigation/RootNavigation';
 import { useFocusEffect } from '@react-navigation/native';
 import { SERVER_IP } from '@env'
+import { useStoreActions, useStoreState } from '../../../state/hooks';
+
 
 type WeekendsListScreenNavigationProp = StackNavigationProp<HomeStackParamList, 'WeekendsList'>;
 type WeekendsListProps = {
@@ -23,6 +25,9 @@ const WeekendsListScreen = ({route, navigation}: WeekendsListProps) => {
 
   const { user } = useAuthentication();
   
+  const setCurrentWeekend = useStoreActions((actions) => actions.setWeekend);
+  const currentWeekend = useStoreState(state => state.currentWeekend);
+
   const [myWeekends, setmyWeekends] = useState<Weekend[]>([]);
   const [refreshing, setRefreshing] = useState(false);
   
@@ -65,11 +70,15 @@ const WeekendsListScreen = ({route, navigation}: WeekendsListProps) => {
     });
     const data = await response.json();
     setmyWeekends(data);
+    console.log("BLOOO");
+    console.log(myWeekends[0]);
+    console.log(data);
     setRefreshing(false);
   }
 
 
   const handleCardPress = (weekend: Weekend) => {
+    setCurrentWeekend(weekend);
     RootNavigation.navigate('Weekend', {weekend: weekend})
   };
 

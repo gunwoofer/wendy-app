@@ -8,8 +8,10 @@ import { useAuthentication } from '../../../utils/hooks/useAuthentification';
 import { Weekend } from '../../../models/weekend';
 import * as RootNavigation from '../../../navigation/RootNavigation';
 import { SERVER_IP } from '@env';
+import { useStoreActions } from '../../../state/hooks';
 
 const AddWeekendModal = () => {
+  const setCurrentWeekend = useStoreActions((actions) => actions.setWeekend);
 
   const { user } = useAuthentication();
 
@@ -34,6 +36,7 @@ const AddWeekendModal = () => {
       const weekendCreated: Weekend = await response.json();
       setModalVisible(false);
       setName('')
+      setCurrentWeekend(weekendCreated)
       RootNavigation.navigate('Weekend', {weekend: weekendCreated})
 
     } catch (error) {
