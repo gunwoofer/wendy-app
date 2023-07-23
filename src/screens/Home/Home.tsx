@@ -53,7 +53,6 @@ const HomeScreen = ({route, navigation}: HomeProps) => {
                     ({ navigation }) => ({
                         tabPress: (e) => {
                             e.preventDefault()
-                            console.log("TEST LISTENER");
                             navigation.navigate("WeekendsList");
                         },
                     })

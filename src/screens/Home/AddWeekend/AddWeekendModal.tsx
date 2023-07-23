@@ -37,7 +37,7 @@ const AddWeekendModal = () => {
       setModalVisible(false);
       setName('')
       setCurrentWeekend(weekendCreated)
-      RootNavigation.navigate('Weekend', {weekend: weekendCreated})
+      RootNavigation.navigate('Weekend')
 
     } catch (error) {
       console.error(error);

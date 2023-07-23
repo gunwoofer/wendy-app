@@ -12,6 +12,7 @@ import * as RootNavigation from '../../../navigation/RootNavigation';
 import { useFocusEffect } from '@react-navigation/native';
 import { SERVER_IP } from '@env'
 import { useStoreActions, useStoreState } from '../../../state/hooks';
+import WeekendService from '../../../services/WeekendService';
 
 
 type WeekendsListScreenNavigationProp = StackNavigationProp<HomeStackParamList, 'WeekendsList'>;
@@ -22,25 +23,20 @@ type WeekendsListProps = {
 
 
 const WeekendsListScreen = ({route, navigation}: WeekendsListProps) => {
+  const weekendService = WeekendService.getInstance();
 
   const { user } = useAuthentication();
   
   const setCurrentWeekend = useStoreActions((actions) => actions.setWeekend);
-  const currentWeekend = useStoreState(state => state.currentWeekend);
 
   const [myWeekends, setmyWeekends] = useState<Weekend[]>([]);
   const [refreshing, setRefreshing] = useState(false);
   
   useFocusEffect(
     React.useCallback(() => {
-      console.log('Screen was focused');
       if(user) {
-        console.log("Screen focus and user detected");
         getWeekends()
       }
-      return () => {
-        console.log('Screen was unfocused');
-      };
     }, [user])
   );
   
@@ -59,8 +55,6 @@ const WeekendsListScreen = ({route, navigation}: WeekendsListProps) => {
   }
 
   const getWeekends = async () => {
-    console.log(user?.email);
-    console.log(process.env.SERVER_IP);
     const response = await fetch(SERVER_IP + '/getWeekends', {
       method: 'POST',
       headers: {
@@ -70,16 +64,14 @@ const WeekendsListScreen = ({route, navigation}: WeekendsListProps) => {
     });
     const data = await response.json();
     setmyWeekends(data);
-    console.log("BLOOO");
-    console.log(myWeekends[0]);
-    console.log(data);
     setRefreshing(false);
   }
 
 
-  const handleCardPress = (weekend: Weekend) => {
-    setCurrentWeekend(weekend);
-    RootNavigation.navigate('Weekend', {weekend: weekend})
+  const handleCardPress = async (weekend: Weekend) => {
+    const chosenWeekend: Weekend = await weekendService.getWeekendByIdAPI(weekend.id);
+    setCurrentWeekend(chosenWeekend);
+    RootNavigation.navigate('Weekend')
   };
 
  
