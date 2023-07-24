@@ -9,6 +9,9 @@ import { useStoreActions, useStoreState } from '../../../state/hooks';
 import { ScrollView } from 'react-native-gesture-handler';
 import WeekendService from '../../../services/WeekendService';
 import { Weekend } from '../../../models/weekend';
+import { SERVER_IP } from '@env';
+import { Snackbar } from 'react-native-paper';
+import { Ionicons, FontAwesome } from '@expo/vector-icons';
 
 type GeneralScreenNavigationProp = StackNavigationProp<WeekendStackParamList, 'General'>;
 type GeneralProps = {
@@ -19,20 +22,22 @@ type GeneralProps = {
 const GeneralScreen = ({route, navigation}: GeneralProps) => {
 
   const weekendService = WeekendService.getInstance();
-  
-  const [name, setName] = useState('');
-  const [address, setAddress] = useState('');
-  const [tricountLink, setTricountLink] = useState('');
-  const [reservationLink, setReservationLink] = useState('');
+  const currentWeekend = useStoreState(state => state.currentWeekend);
+  const setCurrentWeekend = useStoreActions((actions) => actions.setWeekend);
+
+  const [name, setName] = useState(currentWeekend?.name);
+  const [address, setAddress] = useState(currentWeekend?.address);
+  const [tricountLink, setTricountLink] = useState(currentWeekend?.tricount_link);
+  const [reservationLink, setReservationLink] = useState(currentWeekend?.reservation_link);
   const [dateDebut, setDateDebut] = useState("2023-07-27")
   const [dateFin, setDateFin] = useState("2023-07-28")
 
   const [isDatePickerDebutVisible, setDatePickerDebutVisibility] = useState(false);
   const [isDatePickerFinVisible, setDatePickerFinVisibility] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isSnackBarVisible, setSnackBarVisible] = useState(false);
 
-  const currentWeekend = useStoreState(state => state.currentWeekend);
-  const setCurrentWeekend = useStoreActions((actions) => actions.setWeekend);
+
 
   const showDatePickerDebut = () => {
     setDatePickerDebutVisibility(true);
@@ -60,7 +65,7 @@ const GeneralScreen = ({route, navigation}: GeneralProps) => {
     hideDatePickerFin();
   };
 
-  const saveReservation = () => {
+  const saveReservation = async() => {
     // Implement your save logic here
     // You can use the values of name, date, address, tricountLink, airbnbLink
     console.log("SAVING LOG :")
@@ -70,6 +75,19 @@ const GeneralScreen = ({route, navigation}: GeneralProps) => {
     console.log(reservationLink)
     console.log(dateDebut)
     console.log(dateFin)
+    try {
+      const response = await fetch(`${SERVER_IP}/updateWeekend/${currentWeekend?.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({"name": name, "address": address, "tricount_link": tricountLink, "reservation_link": reservationLink}),
+      });
+      const data = await response.json();
+      setSnackBarVisible(true);
+    } catch (error) {
+      throw new Error("error updating the weekend");
+    }
   };
 
   const handleRefresh = async () => {
@@ -158,6 +176,17 @@ const GeneralScreen = ({route, navigation}: GeneralProps) => {
           <Text style={styles.buttonText}>Save</Text>
         </TouchableOpacity>
 
+        <Snackbar
+          visible={isSnackBarVisible}
+          onDismiss={() => setSnackBarVisible(false)}
+          duration={2500}
+          style={{ backgroundColor: 'green' }}
+        >
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <FontAwesome name="check" size={24} color="white" style={{ marginRight: 10}} />
+            <Text style={{color: "white"}}>Weekend updated !</Text>
+          </View>
+        </Snackbar>
       </ScrollView>
   );
 };
