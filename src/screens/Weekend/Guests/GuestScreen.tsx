@@ -18,14 +18,14 @@ const GuestsScreen = ({route, navigation}: GuestsProps) => {
     <View style={styles.container}>
       <Text style={styles.text}>Guests</Text>
       <Text>{route.params.weekend.name}</Text>
+      <Text>date de creation: {route.params.weekend.date}</Text>
+      <Text>Sharing code: {route.params.weekend.sharing_code}</Text>
       <FlatList
             data={route.params.weekend.participants}
             renderItem={({ item }) => (
               <UserCard user={item} />
             )}
           />
-      <Text>date de creation: {route.params.weekend.date}</Text>
-      <Text>Sharing code: {route.params.weekend.sharing_code}</Text>
     </View>
   );
 };

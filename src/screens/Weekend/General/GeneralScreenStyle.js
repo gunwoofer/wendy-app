@@ -9,8 +9,7 @@ export const styles = StyleSheet.create({
       padding:5,
       flex: 1,
       alignItems: 'center',
-      backgroundColor: '#f5f5f5',
-      justifyContent: 'flex'
+      backgroundColor: '#f5f5f5'
     },
     image: {
       width: '100%',

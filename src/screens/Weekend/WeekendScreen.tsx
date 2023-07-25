@@ -13,6 +13,7 @@ import GeneralScreen from './General/GeneralScreen';
 import TransportScreen from './Transport/TransportScreen';
 import GuestsScreen from './Guests/GuestScreen';
 import { RootStackParamList } from '../../navigation/userStack';
+import CustomBottomTab from '../../components/Bottomtabs/CustomBottomTab';
 
 export type WeekendStackParamList = {
   General: { weekend: Weekend },
@@ -32,7 +33,7 @@ const WeekendScreen = ({route, navigation}: WeekendProps) => {
 
 
   return (
-        <Tab.Navigator initialRouteName='General'
+        <Tab.Navigator tabBar ={props => <CustomBottomTab{...props}/>} initialRouteName='General' 
         screenOptions={{headerShown:false}}> 
             <Tab.Screen 
                 name='General' 
