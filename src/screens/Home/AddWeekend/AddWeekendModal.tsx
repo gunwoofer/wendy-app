@@ -7,8 +7,12 @@ import { styles } from './AddWeekendModalStyle';
 import { useAuthentication } from '../../../utils/hooks/useAuthentification';
 import { Weekend } from '../../../models/weekend';
 import * as RootNavigation from '../../../navigation/RootNavigation';
+import { SERVER_IP } from '@env';
+import { useStoreActions } from '../../../state/hooks';
+import * as Haptics from 'expo-haptics';
 
 const AddWeekendModal = () => {
+  const setCurrentWeekend = useStoreActions((actions) => actions.setWeekend);
 
   const { user } = useAuthentication();
 
@@ -23,7 +27,7 @@ const AddWeekendModal = () => {
 
   const handleCreate = async () => {
     try {
-      const response = await fetch('http://192.168.31.97:3000/createWeekend', {
+      const response = await fetch(SERVER_IP + '/createWeekend', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -33,7 +37,8 @@ const AddWeekendModal = () => {
       const weekendCreated: Weekend = await response.json();
       setModalVisible(false);
       setName('')
-      RootNavigation.navigate('Weekend', {weekend: weekendCreated})
+      setCurrentWeekend(weekendCreated)
+      RootNavigation.navigate('Weekend')
 
     } catch (error) {
       console.error(error);
@@ -49,7 +54,11 @@ const AddWeekendModal = () => {
 
   return (
     <View>
-      <Button onPress={() => {setModalVisible(true)}}
+      <Button onPress={() => {
+              Haptics.notificationAsync(
+                Haptics.NotificationFeedbackType.Success
+              );
+              setModalVisible(true)}}
         buttonStyle={styles.buttonStyle}
         icon={
             <Ionicons name="add" size={30} color="white" />

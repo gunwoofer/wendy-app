@@ -16,9 +16,9 @@ import { RootStackParamList } from '../../navigation/userStack';
 import CustomBottomTab from '../../components/Bottomtabs/CustomBottomTab';
 
 export type WeekendStackParamList = {
-  General: { weekend: Weekend },
-  Guest : { weekend: Weekend },
-  Transport : { weekend: Weekend };
+  General: undefined,
+  Guest : undefined,
+  Transport : undefined;
 };
 const Tab = createBottomTabNavigator<WeekendStackParamList>();
 
@@ -30,14 +30,11 @@ type WeekendProps = {
 
 const WeekendScreen = ({route, navigation}: WeekendProps) => {
 
-
-
   return (
         <Tab.Navigator tabBar ={props => <CustomBottomTab{...props}/>} initialRouteName='General' 
         screenOptions={{headerShown:false}}> 
             <Tab.Screen 
                 name='General' 
-                initialParams={{ weekend : route.params.weekend }}
                 component={GeneralScreen}
                 options={{ 
                     tabBarIcon: ({ color, size }) => (
@@ -47,7 +44,6 @@ const WeekendScreen = ({route, navigation}: WeekendProps) => {
             />
             <Tab.Screen 
                 name='Guest'
-                initialParams={{ weekend : route.params.weekend }}
                 component={GuestsScreen} 
                 options={{ 
                     tabBarIcon: ({ color, size }) => (
@@ -57,7 +53,6 @@ const WeekendScreen = ({route, navigation}: WeekendProps) => {
             />
             <Tab.Screen 
                 name='Transport'
-                initialParams={{ weekend : route.params.weekend }}
                 component={TransportScreen} 
                 options={{ 
                     tabBarIcon: ({ color, size }) => (

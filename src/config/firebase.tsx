@@ -20,7 +20,7 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-console.log("INIT");
+console.log("INIT FIREBASE AUTH");
 const app = initializeApp(firebaseConfig);
 
 
