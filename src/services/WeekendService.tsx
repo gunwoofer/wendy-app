@@ -4,7 +4,7 @@ import { SERVER_IP } from '@env';
 
 // Define the type for the WeekendService instance
 interface WeekendServiceInstance {
-  setWeekendAPI: () => Promise<Weekend>;
+  setWeekendAPI: (id: number, name: string, address: string, tricount_link: string, reservation_link: string, date_debut: string, date_fin: string) => Promise<Weekend>;
   getWeekendByIdAPI: (id: number) => Promise<Weekend>;
 }
 
@@ -19,10 +19,16 @@ const WeekendService: WeekendServiceSingleton = (function () {
 
   function createInstance(): WeekendServiceInstance {
 
-    async function setWeekendAPI(): Promise<Weekend> {
-      const response = await fetch("http://your-api-url");
-      const data: Weekend = await response.json();
-      return data;
+    async function setWeekendAPI(id: number, name: string, address: string, tricount_link: string, reservation_link: string, date_debut: string, date_fin: string): Promise<Weekend> {
+      const response = await fetch(`${SERVER_IP}/updateWeekend/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ "name": name, "address": address, "tricount_link": tricount_link, "reservation_link": reservation_link, "date_debut": date_debut, "date_fin": date_fin }),
+      });
+      const weekend: Weekend = await response.json();
+      return weekend;
     }
 
     async function getWeekendByIdAPI(id: number): Promise<Weekend> {

@@ -2,7 +2,8 @@ export interface Weekend {
     id: number;
     name: string;
     address: string;
-    date: string;
+    date_debut: string;
+    date_fin: string;
     participants: string[];
     sharing_code: string;
     tricount_link: string;

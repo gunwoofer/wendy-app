@@ -15,28 +15,33 @@ import { Ionicons, FontAwesome } from '@expo/vector-icons';
 
 type GeneralScreenNavigationProp = StackNavigationProp<WeekendStackParamList, 'General'>;
 type GeneralProps = {
-    navigation: GeneralScreenNavigationProp;
-    route: RouteProp<WeekendStackParamList, 'General'>;
+  navigation: GeneralScreenNavigationProp;
+  route: RouteProp<WeekendStackParamList, 'General'>;
 };
 
-const GeneralScreen = ({route, navigation}: GeneralProps) => {
+const GeneralScreen = ({ route, navigation }: GeneralProps) => {
 
   const weekendService = WeekendService.getInstance();
   const currentWeekend = useStoreState(state => state.currentWeekend);
   const setCurrentWeekend = useStoreActions((actions) => actions.setWeekend);
 
-  const [name, setName] = useState(currentWeekend?.name);
-  const [address, setAddress] = useState(currentWeekend?.address);
-  const [tricountLink, setTricountLink] = useState(currentWeekend?.tricount_link);
-  const [reservationLink, setReservationLink] = useState(currentWeekend?.reservation_link);
-  const [dateDebut, setDateDebut] = useState("2023-07-27")
-  const [dateFin, setDateFin] = useState("2023-07-28")
+  const [name, setName] = useState(currentWeekend!.name);
+  const [address, setAddress] = useState(currentWeekend!.address);
+  const [tricountLink, setTricountLink] = useState(currentWeekend!.tricount_link);
+  const [reservationLink, setReservationLink] = useState(currentWeekend!.reservation_link);
+  const [dateDebut, setDateDebut] = useState(currentWeekend!.date_debut)
+  const [dateFin, setDateFin] = useState(currentWeekend!.date_fin)
 
   const [isDatePickerDebutVisible, setDatePickerDebutVisibility] = useState(false);
   const [isDatePickerFinVisible, setDatePickerFinVisibility] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isSnackBarVisible, setSnackBarVisible] = useState(false);
+  const [editMode, setEditMode] = useState(false);
 
+  // Function to toggle edit mode
+  const toggleEditMode = () => {
+    setEditMode((prevEditMode) => !prevEditMode);
+  };
 
 
   const showDatePickerDebut = () => {
@@ -65,26 +70,12 @@ const GeneralScreen = ({route, navigation}: GeneralProps) => {
     hideDatePickerFin();
   };
 
-  const saveReservation = async() => {
-    // Implement your save logic here
-    // You can use the values of name, date, address, tricountLink, airbnbLink
-    console.log("SAVING LOG :")
-    console.log(name)
-    console.log(address)
-    console.log(tricountLink)
-    console.log(reservationLink)
-    console.log(dateDebut)
-    console.log(dateFin)
+  const saveReservation = async () => {
     try {
-      const response = await fetch(`${SERVER_IP}/updateWeekend/${currentWeekend?.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({"name": name, "address": address, "tricount_link": tricountLink, "reservation_link": reservationLink}),
-      });
-      const data = await response.json();
+      const weekend: Weekend = await weekendService.setWeekendAPI(currentWeekend!.id, name, address, tricountLink, reservationLink, dateDebut, dateFin)
+      setCurrentWeekend(weekend);
       setSnackBarVisible(true);
+      toggleEditMode();
     } catch (error) {
       throw new Error("error updating the weekend");
     }
@@ -99,95 +90,168 @@ const GeneralScreen = ({route, navigation}: GeneralProps) => {
   };
 
 
-  return (
-    <ScrollView contentContainerStyle = {styles.container} 
-    refreshControl={ 
-      <RefreshControl
-        refreshing={isRefreshing}
-        onRefresh={handleRefresh}
-      />
-    }
->
-        {/* Image principale */}
-        <Image 
-            style={styles.image as ImageStyle}
-            source={require('../../../../assets/chalets-mocks/3.jpg')}
-          />
-
-        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
-
-          {/* Date de debut */}
-          <Text>Du</Text>
-          <Button title={dateDebut} onPress={showDatePickerDebut}></Button>
-
-          <DateTimePickerModal
-            isVisible={isDatePickerDebutVisible}
-            mode="date"
-            onConfirm={handleConfirmDebut}
-            onCancel={hideDatePickerDebut}
-            timeZoneOffsetInMinutes={0}
-          />
-
-          {/* Date de fin */}
-          <Text>au</Text>
-          <Button title={dateFin} onPress={showDatePickerFin} />
-
-          <DateTimePickerModal
-            isVisible={isDatePickerFinVisible}
-            mode="date"
-            onConfirm={handleConfirmFin}
-            onCancel={hideDatePickerFin}
-            timeZoneOffsetInMinutes={0}
+  // Function to render the input fields
+  const renderInputFields = () => {
+    return (
+      <>
+        {/* Nom */}
+        <View style={styles.inputFieldContainer}>
+          <Text style={styles.label}>Name</Text>
+          <TextInput
+            style={styles.input}
+            defaultValue={currentWeekend?.name}
+            onChangeText={setName}
           />
         </View>
 
-        {/* Nom */}
-        <TextInput
-          style={styles.input}
-          defaultValue ={currentWeekend?.name}
-          onChangeText={setName}
-        />
-
         {/* Adresse */}
-        <TextInput
-          style={styles.input}
-          placeholder="Address"
-          defaultValue={currentWeekend?.address}
-          onChangeText={setAddress}
-        />
+        <View style={styles.inputFieldContainer}>
+          <Text style={styles.label}>Address</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Address"
+            defaultValue={currentWeekend?.address}
+            onChangeText={setAddress}
+          />
+        </View>
+
 
         {/* Tricount */}
-        <TextInput
-          style={styles.input}
-          placeholder="Tricount Link"
-          defaultValue={currentWeekend?.tricount_link}
-          onChangeText={setTricountLink}
-        />
+        <View style={styles.inputFieldContainer}>
+          <Text style={styles.label}>Tricount</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Tricount Link"
+            defaultValue={currentWeekend?.tricount_link}
+            onChangeText={setTricountLink}
+          />
+        </View>
+
 
         {/* Reservation */}
-        <TextInput
-          style={styles.input}
-          placeholder="Airbnb Link"
-          defaultValue={currentWeekend?.reservation_link}
-          onChangeText={setReservationLink}
-        />
+        <View style={styles.inputFieldContainer}>
+          <Text style={styles.label}>Reservation</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Airbnb Link"
+            defaultValue={currentWeekend?.reservation_link}
+            onChangeText={setReservationLink}
+          />
+        </View>
+      </>
+    );
+  };
 
+  // Function to render the read-only fields
+  const renderReadOnlyFields = () => {
+    return (
+      <>
+        <View style={styles.readOnlyFieldContainer}>
+          <Text style={styles.label}>Name:</Text>
+          <Text style={styles.readOnlyText}>{currentWeekend?.name}</Text>
+        </View>
+        <View style={styles.readOnlyFieldContainer}>
+          <Text style={styles.label}>Address:</Text>
+          <Text style={styles.readOnlyText}>{currentWeekend?.address}</Text>
+        </View>
+        <View style={styles.readOnlyFieldContainer}>
+          <Text style={styles.label}>Tricount:</Text>
+          <Text style={styles.readOnlyText}>{currentWeekend?.tricount_link}</Text>
+        </View>
+        <View style={styles.readOnlyFieldContainer}>
+          <Text style={styles.label}>Airbnb:</Text>
+          <Text style={styles.readOnlyText}>{currentWeekend?.reservation_link}</Text>
+        </View>
+      </>
+    );
+  };
+
+  // Function to render the buttons based on the edit mode
+  const renderButtons = () => {
+    if (editMode) {
+      // Show "Save" button in edit mode
+      return (
         <TouchableOpacity style={styles.saveButton} onPress={saveReservation}>
           <Text style={styles.buttonText}>Save</Text>
         </TouchableOpacity>
+      );
+    } else {
+      // Show "Edit" button in read-only mode
+      return (
+        <TouchableOpacity style={styles.saveButton} onPress={toggleEditMode}>
+          <Text style={styles.buttonText}>Edit</Text>
+        </TouchableOpacity>
+      );
+    }
+  };
 
-        <Snackbar
-          visible={isSnackBarVisible}
-          onDismiss={() => setSnackBarVisible(false)}
-          duration={2500}
-          style={{ backgroundColor: 'green' }}
-        >
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <FontAwesome name="check" size={24} color="white" style={{ marginRight: 10}} />
-            <Text style={{color: "white"}}>Weekend updated !</Text>
-          </View>
-        </Snackbar>
-      </ScrollView>
+  return (
+    <ScrollView contentContainerStyle={styles.container}
+      refreshControl={
+        <RefreshControl
+          refreshing={isRefreshing}
+          onRefresh={handleRefresh}
+        />
+      }
+    >
+      {/* Image principale */}
+      <Image
+        style={styles.image as ImageStyle}
+        source={require('../../../../assets/chalets-mocks/3.jpg')}
+      />
+
+      <View style={styles.dateContainer}>
+
+        {/* Date de debut */}
+        <Text>Du </Text>
+        {editMode ?
+          <Button title={dateDebut || "DEBUT"} onPress={showDatePickerDebut}></Button>
+        : 
+          <Text style={styles.dateReadOnly}>{dateDebut || "DEBUT"}</Text>
+        }
+
+        <DateTimePickerModal
+          isVisible={isDatePickerDebutVisible}
+          mode="date"
+          onConfirm={handleConfirmDebut}
+          onCancel={hideDatePickerDebut}
+          timeZoneOffsetInMinutes={0}
+        />
+
+        {/* Date de fin */}
+        <Text> au </Text>
+        {editMode ?
+          <Button title={dateFin || "FIN"} onPress={showDatePickerFin} />
+        : 
+          <Text style={styles.dateReadOnly}>{dateFin || "FIN"}</Text>
+        }
+        <DateTimePickerModal
+          isVisible={isDatePickerFinVisible}
+          mode="date"
+          onConfirm={handleConfirmFin}
+          onCancel={hideDatePickerFin}
+          timeZoneOffsetInMinutes={0}
+        />
+      </View>
+
+      {/* Render the appropriate fields based on the edit mode */}
+      {editMode ? renderInputFields() : renderReadOnlyFields()}
+
+      {/* Render the buttons based on the edit mode */}
+      {renderButtons()}
+
+      <Snackbar
+        visible={isSnackBarVisible}
+        onDismiss={() => setSnackBarVisible(false)}
+        duration={2500}
+        style={{ backgroundColor: 'green', marginBottom: 100 }}
+      >
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <FontAwesome name="check" size={24} color="white" style={{ marginRight: 10 }} />
+          <Text style={{ color: "white" }}>Weekend updated !</Text>
+        </View>
+      </Snackbar>
+    </ScrollView>
   );
 };
 

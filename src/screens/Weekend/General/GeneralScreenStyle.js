@@ -8,8 +8,8 @@ export const styles = StyleSheet.create({
     container: {
       padding:5,
       flex: 1,
-      alignItems: 'center',
-      backgroundColor: '#f5f5f5'
+      alignItems: 'left',
+      backgroundColor: '#f5f5f5',
     },
     image: {
       width: '100%',
@@ -36,30 +36,39 @@ export const styles = StyleSheet.create({
       paddingVertical: 14,
       borderRadius: 8,
       backgroundColor: '#007bff',
+      justifyContent: 'flex-end',
     },
     buttonText: {
       fontSize: 18,
       fontWeight: 'bold',
       color: '#fff',
     },
-    tabs: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        width: '100%',
-        paddingHorizontal: 40,
-        paddingVertical: 8,
-        backgroundColor: '#FFF',
-        elevation: 2,
+    readOnlyFieldContainer: {
+      flexDirection: 'row',
+      alignItems: 'left',
+      marginBottom: 10,
+      fontSize: "50em"
     },
-    tabButton: {
-        alignItems: 'center',
+    label: {
+      fontWeight: 'bold',
+      marginRight: 10,
+      width: 100, // Adjust the width based on your preference
+      fontSize: 17
     },
-        tabText: {
-        fontSize: 12,
-        marginTop: 4,
+    inputFieldContainer: {
+      width: '100%'
     },
-        activeTabText: {
-        color: '#007AFF',
+    readOnlyText: {
+      fontSize: 17, // Change the font size here
     },
+    dateReadOnly: {
+      fontWeight: 'bold',
+      color: 'blue',
+      fontSize: 15,
+    },
+    dateContainer: { 
+      flexDirection: 'row', 
+      alignItems: 'center', 
+      marginBottom: 10 
+    }
   });
