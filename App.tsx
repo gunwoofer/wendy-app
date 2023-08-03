@@ -16,8 +16,6 @@ const store = createStore<StoreModel>({
 });
 
 
-
-
 export default function App() {
   return (
     <StoreProvider store={store}>

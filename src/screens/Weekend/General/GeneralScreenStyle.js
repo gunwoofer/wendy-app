@@ -38,7 +38,7 @@ export const styles = StyleSheet.create({
     },
     readOnlyFieldContainer: {
       flexDirection: 'row',
-      alignItems: 'left',
+      textAlign: 'left',
       marginBottom: 10,
       fontSize: "50em"
     },
