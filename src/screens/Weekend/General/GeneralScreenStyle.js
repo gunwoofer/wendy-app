@@ -2,20 +2,13 @@ import { StyleSheet } from 'react-native';
 
 
 export const styles = StyleSheet.create({
-    content: {
-        padding:150
-    },
     container: {
       padding:5,
-      flex: 1,
-      alignItems: 'left',
-      backgroundColor: '#f5f5f5',
     },
     image: {
       width: '100%',
       height: 200,
       marginBottom: 24,
-      resizeMode: 'cover',
       borderRadius: 8,
     },
     input: {
@@ -70,5 +63,10 @@ export const styles = StyleSheet.create({
       flexDirection: 'row', 
       alignItems: 'center', 
       marginBottom: 10 
+    },
+    editIcon: {
+      position: 'absolute',
+      top: 10,
+      right: 10
     }
   });

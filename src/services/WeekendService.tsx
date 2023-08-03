@@ -6,6 +6,7 @@ import { SERVER_IP } from '@env';
 interface WeekendServiceInstance {
   setWeekendAPI: (id: number, name: string, address: string, tricount_link: string, reservation_link: string, date_debut: string, date_fin: string) => Promise<Weekend>;
   getWeekendByIdAPI: (id: number) => Promise<Weekend>;
+  setWeekendPhoto(id: number, image_base64: string): Promise<any>;
 }
 
 // Define the type for the singleton instance of WeekendService
@@ -42,9 +43,29 @@ const WeekendService: WeekendServiceSingleton = (function () {
       return weekend;
     }
 
+    async function setWeekendPhoto(id: number, image_base64: string): Promise<any> {
+      const response = await fetch(SERVER_IP + '/upload_image/' + id, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          base64_image: image_base64
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Image upload failed');
+      }
+
+      const responseData = await response.json();
+      return responseData;
+    }
+
     return {
       setWeekendAPI,
-      getWeekendByIdAPI
+      getWeekendByIdAPI,
+      setWeekendPhoto
     };
   }
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, Button, ImageStyle, RefreshControl } from 'react-native';
 import { styles } from './GeneralScreenStyle';
 import { WeekendStackParamList } from '../WeekendScreen';
@@ -11,7 +11,8 @@ import WeekendService from '../../../services/WeekendService';
 import { Weekend } from '../../../models/weekend';
 import { SERVER_IP } from '@env';
 import { Snackbar } from 'react-native-paper';
-import { Ionicons, FontAwesome } from '@expo/vector-icons';
+import { Feather , FontAwesome } from '@expo/vector-icons';
+import * as ImagePicker from 'expo-image-picker';
 
 type GeneralScreenNavigationProp = StackNavigationProp<WeekendStackParamList, 'General'>;
 type GeneralProps = {
@@ -37,12 +38,45 @@ const GeneralScreen = ({ route, navigation }: GeneralProps) => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isSnackBarVisible, setSnackBarVisible] = useState(false);
   const [editMode, setEditMode] = useState(false);
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    if(currentWeekend)
+      fetchImage().catch(console.error);
+  }, [currentWeekend]);
+
+  const fetchImage = async () => {
+    try {
+      const response = await fetch(SERVER_IP + '/get_image/' + currentWeekend!.id);
+      const blob = await response.blob();
+      const imageUrl = URL.createObjectURL(blob);
+      setImageUrl(imageUrl);
+    } catch (error) {
+    }
+  };
+
+  const pickImages = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      quality: 1,
+      base64: true,
+      allowsMultipleSelection: false
+    });
+
+    if (!result.canceled) {
+      try {
+        weekendService.setWeekendPhoto(currentWeekend!.id, result.assets[0].base64!)
+        setImageUrl(`data:image/png;base64,${result.assets[0].base64}`);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
 
   // Function to toggle edit mode
   const toggleEditMode = () => {
     setEditMode((prevEditMode) => !prevEditMode);
   };
-
 
   const showDatePickerDebut = () => {
     setDatePickerDebutVisibility(true);
@@ -195,10 +229,16 @@ const GeneralScreen = ({ route, navigation }: GeneralProps) => {
       }
     >
       {/* Image principale */}
-      <Image
-        style={styles.image as ImageStyle}
-        source={require('../../../../assets/chalets-mocks/3.jpg')}
-      />
+      <>
+        {imageUrl ? (
+          <Image source={{ uri: imageUrl, cache: 'reload', headers: {
+            Pragma: "no-cache",
+        }}} style={styles.image as ImageStyle}/>
+        ) : null}
+        <TouchableOpacity style={styles.editIcon} onPress={pickImages}>
+          <Feather  name="edit" size={24} color="white" />
+        </TouchableOpacity> 
+      </>
 
       <View style={styles.dateContainer}>
 
@@ -251,6 +291,9 @@ const GeneralScreen = ({ route, navigation }: GeneralProps) => {
           <Text style={{ color: "white" }}>Weekend updated !</Text>
         </View>
       </Snackbar>
+
+      {/* <Button title="Pick an image from camera roll" onPress={pickImage} />
+      {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />} */}
     </ScrollView>
   );
 };
