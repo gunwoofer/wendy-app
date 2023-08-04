@@ -6,6 +6,7 @@ import { createStore } from 'easy-peasy';
 import { StoreModel } from './src/state/models';
 import { action, StoreProvider  } from 'easy-peasy';
 import { Weekend } from './src/models/weekend';
+import { StatusBar } from 'expo-status-bar';
 
 const store = createStore<StoreModel>({
   currentWeekend: undefined,
@@ -18,7 +19,9 @@ const store = createStore<StoreModel>({
 
 export default function App() {
   return (
+    
     <StoreProvider store={store}>
+      <StatusBar style="dark" />
       <ThemeProvider>
         <RootNavigation />
       </ThemeProvider>
