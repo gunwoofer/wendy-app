@@ -1,27 +1,31 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { Weekend } from '../../models/weekend';
+import { SERVER_IP } from '@env';
 
 
 const WeekendCard = (props: {weekend: Weekend, onPress: any}) => {
 
-  const images = [
-    require('../../../assets/chalets-mocks/1.jpg'),
-    require('../../../assets/chalets-mocks/2.jpg'),
-    require('../../../assets/chalets-mocks/3.jpg'),
-    require('../../../assets/chalets-mocks/4.jpg'),
-    require('../../../assets/chalets-mocks/5.jpg'),
-    require('../../../assets/chalets-mocks/6.jpg'),
-  ];
+  const [imageUrl, setImageUrl] = useState<string | undefined>(undefined);
 
-  const getRandomImage = () => {
-    const randomIndex = Math.floor(Math.random() * images.length);
-    return images[randomIndex];
+  useEffect(() => {
+    if(props.weekend)
+      fetchImage().catch(console.error);
+  }, [props.weekend]);
+
+  const fetchImage = async () => {
+    try {
+      const response = await fetch(SERVER_IP + '/get_image/' + props.weekend.id);
+      const blob = await response.blob();
+      const imageUrl = URL.createObjectURL(blob);
+      setImageUrl(imageUrl);
+    } catch (error) {
+    }
   };
 
   return (
     <TouchableOpacity style={styles.card} onPress={() => props.onPress(props.weekend)}>
-      <Image source={getRandomImage()} style={styles.image} />
+      <Image source={{uri: imageUrl}} style={styles.image} />
       <Text style={styles.name}>{props.weekend.name}</Text>
       <Text style={styles.email}>{props.weekend.participants}</Text>
     </TouchableOpacity>

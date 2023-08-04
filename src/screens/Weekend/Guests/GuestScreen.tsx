@@ -43,7 +43,7 @@ const GuestsScreen = ({route, navigation}: GuestsProps) => {
             )}
             refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh}/>}
           />
-      <Text>date de creation: {currentWeekend!.date}</Text>
+      <Text>date: {currentWeekend!.date_debut}</Text>
       <Text>Sharing code: {currentWeekend!.sharing_code}</Text>
     </View>
   );
