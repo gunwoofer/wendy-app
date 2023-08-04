@@ -74,4 +74,21 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 16,
     },
+    sectionLabelContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginVertical: 10,
+    },
+    sectionSeparator: {
+      flex: 1,
+      height: 1,
+      backgroundColor: 'black',
+      marginHorizontal: 10,
+    },
+    sectionLabelText: {
+      fontSize: 16,
+      fontWeight: 'bold',
+      marginHorizontal: 10,
+    },
   });

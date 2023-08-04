@@ -3,7 +3,6 @@ import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { Weekend } from '../../models/weekend';
 import { SERVER_IP } from '@env';
 
-
 const WeekendCard = (props: {weekend: Weekend, onPress: any}) => {
 
   const [imageUrl, setImageUrl] = useState<string | undefined>(undefined);
@@ -25,7 +24,11 @@ const WeekendCard = (props: {weekend: Weekend, onPress: any}) => {
 
   return (
     <TouchableOpacity style={styles.card} onPress={() => props.onPress(props.weekend)}>
-      <Image source={{uri: imageUrl}} style={styles.image} />
+      {props.weekend.status === 'coming' ? (
+        <Image source={{uri: imageUrl}} style={styles.image} />
+      ):(
+        <Image source={{uri: imageUrl}} style={styles.image_past} />
+      )}
       <Text style={styles.name}>{props.weekend.name}</Text>
       <Text style={styles.email}>{props.weekend.participants}</Text>
     </TouchableOpacity>
@@ -44,6 +47,12 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     resizeMode: 'cover',
+  },
+  image_past: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
+    opacity:0.5
   },
   name: {
     position: 'absolute',

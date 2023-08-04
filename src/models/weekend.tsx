@@ -8,5 +8,6 @@ export interface Weekend {
     sharing_code: string;
     tricount_link: string;
     reservation_link: string;
+    status: string;
 }
   

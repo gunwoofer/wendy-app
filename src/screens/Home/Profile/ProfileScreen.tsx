@@ -8,8 +8,11 @@ const auth = getAuth();
 
 const ProfileScreen = () => {
   const { user } = useAuthentication();
+
+  const displayName = user?.displayName;
   return (
     <View style={styles.profileContainer}>
+      <Text style={styles.profileEmail}>{displayName}</Text>
       <Text style={styles.profileEmail}>{user?.email}</Text>
       <Button title="Logout" onPress={() => signOut(auth)} />
     </View>
