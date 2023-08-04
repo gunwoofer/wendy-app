@@ -21,6 +21,7 @@ const WeekendService: WeekendServiceSingleton = (function () {
   function createInstance(): WeekendServiceInstance {
 
     async function setWeekendAPI(id: number, name: string, address: string, tricount_link: string, reservation_link: string, date_debut: string, date_fin: string): Promise<Weekend> {
+      console.log("update weekend")
       const response = await fetch(`${SERVER_IP}/updateWeekend/${id}`, {
         method: 'PUT',
         headers: {
@@ -33,6 +34,7 @@ const WeekendService: WeekendServiceSingleton = (function () {
     }
 
     async function getWeekendByIdAPI(id: number): Promise<Weekend> {
+      console.log("get weekend by id")
       const response = await fetch(SERVER_IP + '/getWeekendById/' + id, {
         method: 'GET',
         headers: {
@@ -44,6 +46,7 @@ const WeekendService: WeekendServiceSingleton = (function () {
     }
 
     async function setWeekendPhoto(id: number, image_base64: string): Promise<any> {
+      console.log("set weekend photo")
       const response = await fetch(SERVER_IP + '/upload_image/' + id, {
         method: 'POST',
         headers: {

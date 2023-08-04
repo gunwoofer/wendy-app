@@ -90,6 +90,7 @@ const WeekendsListScreen = ({ route, navigation }: WeekendsListProps) => {
 
 
   const getWeekends = async () => {
+    console.log("getWeekends")
     const response = await fetch(SERVER_IP + '/getWeekends', {
       method: 'POST',
       headers: {

@@ -1,5 +1,5 @@
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, Button, ImageStyle, RefreshControl, Clipboard } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, Button, ImageStyle, RefreshControl } from 'react-native';
 import { styles } from './GeneralScreenStyle';
 import { WeekendStackParamList } from '../WeekendScreen';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -12,6 +12,8 @@ import { Weekend } from '../../../models/weekend';
 import { SERVER_IP } from '@env';
 import { Snackbar } from 'react-native-paper';
 import { Feather , FontAwesome } from '@expo/vector-icons';
+import Icon from 'react-native-vector-icons/FontAwesome';
+
 import * as ImagePicker from 'expo-image-picker';
 
 type GeneralScreenNavigationProp = StackNavigationProp<WeekendStackParamList, 'General'>;
@@ -47,6 +49,7 @@ const GeneralScreen = ({ route, navigation }: GeneralProps) => {
 
   const fetchImage = async () => {
     try {
+      console.log("get image")
       const response = await fetch(SERVER_IP + '/get_image/' + currentWeekend!.id);
       const blob = await response.blob();
       const imageUrl = URL.createObjectURL(blob);
@@ -123,6 +126,11 @@ const GeneralScreen = ({ route, navigation }: GeneralProps) => {
     setIsRefreshing(false);
   };
 
+  const copyToClipboard = (sharing_code?: string) => {
+    if(!sharing_code) return;
+    console.log(sharing_code);
+    Clipboard.setString(sharing_code);
+  };
 
   // Function to render the input fields
   const renderInputFields = () => {
@@ -195,6 +203,15 @@ const GeneralScreen = ({ route, navigation }: GeneralProps) => {
         <View style={styles.readOnlyFieldContainer}>
           <Text style={styles.label}>Airbnb:</Text>
           <Text style={styles.readOnlyText}>{currentWeekend?.reservation_link}</Text>
+        </View>
+        <View style={styles.readOnlyFieldContainer}>
+          <Text style={styles.label}>Code du chalet:</Text>
+          <Text style={styles.readOnlyText}>{currentWeekend?.sharing_code}</Text>
+          <Icon.Button
+              name="copy"
+              style={styles.copyIcon}
+              backgroundColor="#00000000"
+              onPress={() => copyToClipboard(currentWeekend?.sharing_code)}/>
         </View>
       </>
     );

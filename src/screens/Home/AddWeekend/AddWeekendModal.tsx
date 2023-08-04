@@ -27,6 +27,7 @@ const AddWeekendModal = () => {
 
   const handleCreate = async () => {
     try {
+      console.log("create weekend")
       const response = await fetch(SERVER_IP + '/createWeekend', {
         method: 'POST',
         headers: {

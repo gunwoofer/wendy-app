@@ -68,5 +68,9 @@ export const styles = StyleSheet.create({
       position: 'absolute',
       top: 10,
       right: 10
+    },
+    copyIcon:{
+      marginLeft: 10,
     }
+
   });
