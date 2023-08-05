@@ -31,7 +31,6 @@ const WeekendCard = (props: {weekend: Weekend, onPress: any}) => {
         <Image source={{uri: imageUrl}} style={styles.image_past} />
       )}
       <Text style={styles.name}>{props.weekend.name}</Text>
-      <Text style={styles.email}>test test test</Text>
     </TouchableOpacity>
   );
 };
