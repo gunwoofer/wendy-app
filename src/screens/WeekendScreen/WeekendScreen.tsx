@@ -22,10 +22,10 @@ const WeekendScreen = ({route, navigation}: WeekendProps) => {
       <FlatList
             data={route.params.weekend.participants}
             renderItem={({ item }) => (
-              <UserCard user={item} />
+              <UserCard user={item.email} />
             )}
           />
-      <Text>date de creation: {route.params.weekend.date}</Text>
+      <Text>date de creation: {route.params.weekend.date_debut}</Text>
       <Text>Sharing code: {route.params.weekend.sharing_code}</Text>
 
       {/* Display other details of the selected weekend */}

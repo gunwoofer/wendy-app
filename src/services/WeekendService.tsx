@@ -27,7 +27,13 @@ const WeekendService: WeekendServiceSingleton = (function () {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ "name": name, "address": address, "tricount_link": tricount_link, "reservation_link": reservation_link, "date_debut": date_debut, "date_fin": date_fin }),
+        body: JSON.stringify({
+          "name": name,
+          "address": address,
+          "tricount_link": tricount_link,
+          "reservation_link": reservation_link,
+          "date_debut": date_debut,
+          "date_fin": date_fin }),
       });
       const weekend: Weekend = await response.json();
       return weekend;

@@ -4,6 +4,8 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { Input, Button } from 'react-native-elements';
 import { StackScreenProps } from '@react-navigation/stack';
 import { getAuth, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { SERVER_IP } from '@env';
+import { UserModel } from '../../models/user';
 
 const auth = getAuth();
 const SignUpScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
@@ -32,6 +34,20 @@ const SignUpScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
         await updateProfile(user, {
           displayName: `${value.firstName} ${value.lastName}`
         });
+        const response = await fetch(SERVER_IP + '/createUser', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            uid: user.uid,
+            first_name: value.firstName,
+            second_name: value.lastName,
+            email: value.email
+          }),
+        });
+        console.log(await response.json());
+
       }
       navigation.navigate('Sign In');
     } catch (error: any) {

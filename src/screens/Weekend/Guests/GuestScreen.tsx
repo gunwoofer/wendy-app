@@ -39,7 +39,7 @@ const GuestsScreen = ({route, navigation}: GuestsProps) => {
       <FlatList
             data={currentWeekend!.participants}
             renderItem={({ item }) => (
-              <UserCard user={item} />
+              <UserCard user={item.email} />
             )}
             refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh}/>}
           />

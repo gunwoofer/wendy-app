@@ -14,6 +14,7 @@ const WeekendCard = (props: {weekend: Weekend, onPress: any}) => {
 
   const fetchImage = async () => {
     try {
+      console.log('fetching image')
       const response = await fetch(SERVER_IP + '/get_image/' + props.weekend.id);
       const blob = await response.blob();
       const imageUrl = URL.createObjectURL(blob);
@@ -30,7 +31,7 @@ const WeekendCard = (props: {weekend: Weekend, onPress: any}) => {
         <Image source={{uri: imageUrl}} style={styles.image_past} />
       )}
       <Text style={styles.name}>{props.weekend.name}</Text>
-      <Text style={styles.email}>{props.weekend.participants}</Text>
+      <Text style={styles.email}>test test test</Text>
     </TouchableOpacity>
   );
 };

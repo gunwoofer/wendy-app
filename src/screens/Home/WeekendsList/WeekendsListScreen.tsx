@@ -96,7 +96,7 @@ const WeekendsListScreen = ({ route, navigation }: WeekendsListProps) => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ email: user!.email }),
+      body: JSON.stringify({ user_id: user!.uid }),
     });
     const data = await response.json();
     setmyWeekends(data);

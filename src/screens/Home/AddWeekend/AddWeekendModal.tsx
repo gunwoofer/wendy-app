@@ -33,7 +33,10 @@ const AddWeekendModal = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name: name, creator: user!.email }),
+        body: JSON.stringify({
+          name: name,
+          user_id: user!.uid
+        }),
       });
       const weekendCreated: Weekend = await response.json();
       setModalVisible(false);
