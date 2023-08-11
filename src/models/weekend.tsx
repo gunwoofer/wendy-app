@@ -11,5 +11,6 @@ export interface Weekend {
     tricount_link: string;
     reservation_link: string;
     status: string;
+    creator: string;
 }
   

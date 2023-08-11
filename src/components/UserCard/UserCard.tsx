@@ -1,14 +1,46 @@
-import React from 'react';
+import { SERVER_IP } from '@env';
+import React, { useState } from 'react';
 import {Text, TouchableOpacity, StyleSheet } from 'react-native';
+import BouncyCheckbox from "react-native-bouncy-checkbox";
+import { UserModel } from '../../models/user';
+import { Weekend } from '../../models/weekend';
+import { User } from 'firebase/auth';
+import { useAuthentication } from '../../utils/hooks/useAuthentification';
 
 
-const UserCard = (props: {user: string}) => {
+
+const UserCard = (props: {user: UserModel, weekend: Weekend}) => {
+  // const {user} = useAuthentication();
+  const [checked, setChecked] = useState(props.user.is_present);
+
+
+  const update_is_present = (user: UserModel, weekend: Weekend) => {
+    const func = async (isChecked: boolean) => {
+      // const response = await fetch(`${SERVER_IP}/updateWeekendPresence/${weekend.id}`, {
+      //   method: 'PUT',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify({
+      //     "user_id": user.id,
+      //     "is_present": isChecked
+      //   }),
+      // });
+      user.is_present = !user.is_present
+      setChecked(!checked)
+    };
+    return func
+  };
+
   return (
-    <TouchableOpacity style={styles.card}>
-      <Text style={styles.cardTitle}>{props.user}</Text>
-      {/* Add more information from the weekend object */}
-      {/* e.g., address, date, participants */}
-    </TouchableOpacity>
+      <BouncyCheckbox
+        // disabled={props.weekend.creator != props.user.id}
+        text={props.user.first_name + " " + props.user.second_name}
+        isChecked={checked}
+        onPress={update_is_present(props.user, props.weekend)}
+        style={styles.card}
+        textStyle={checked? {textDecorationLine: "none",}: {textDecorationLine: "line-through",}}
+      />
   );
 };
 

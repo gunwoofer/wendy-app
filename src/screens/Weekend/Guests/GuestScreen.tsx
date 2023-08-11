@@ -37,9 +37,10 @@ const GuestsScreen = ({route, navigation}: GuestsProps) => {
       <Text style={styles.text}>Guests</Text>
       <Text>{currentWeekend!.name}</Text>
       <FlatList
-            data={currentWeekend!.participants}
+            // TODO: Se mettre en priorite dans le tri en utilisant authentification pour la comparaison
+            data={currentWeekend!.participants.sort((a, b) => a.first_name.localeCompare(b.second_name))}
             renderItem={({ item }) => (
-              <UserCard user={item.email} />
+              <UserCard user={item} weekend={currentWeekend!}/>
             )}
             refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh}/>}
           />

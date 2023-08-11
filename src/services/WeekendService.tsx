@@ -41,13 +41,58 @@ const WeekendService: WeekendServiceSingleton = (function () {
 
     async function getWeekendByIdAPI(id: number): Promise<Weekend> {
       console.log("get weekend by id")
-      const response = await fetch(SERVER_IP + '/getWeekendById/' + id, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      });
-      const weekend: Weekend = await response.json();
+      console.log("get weekend by id")
+      console.log("get weekend by id")
+
+      // const response = await fetch(SERVER_IP + '/getWeekendById/' + id, {
+      //   method: 'GET',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   }
+      // });
+      // console.log("fetch get weekend by id")
+
+      // const weekend: Weekend = await response.json();
+
+      const weekend: Weekend = {
+        id: 1,
+        name: "Weekend 1",
+        date_debut: "2021-05-01",
+        date_fin: "2021-05-02",
+        status: "coming",
+        address: "address",
+        participants: [
+          {
+            id: 1,
+            first_name: "User",
+            second_name: "Second",
+            email: "user@gmail.com",
+            is_present: true,
+            is_driver: false
+          },
+          {
+            id: 2,
+            first_name: "User2",
+            second_name: "Second2",
+            email: "user2@gmail.com",
+            is_present: false,
+            is_driver: false
+          },
+          {
+            id: 3,
+            first_name: "User3",
+            second_name: "Second3",
+            email: "user3@gmail.com",
+            is_present: true,
+            is_driver: true
+          },
+        ],
+        sharing_code: "sharing_code",
+        tricount_link: "tricount_link",
+        reservation_link: "reservation_link"
+      }
+
+      console.log("weekend: get weekend by id")
       return weekend;
     }
 
