@@ -7,7 +7,7 @@ import { styles } from './AddWeekendModalStyle';
 import { useAuthentication } from '../../../utils/hooks/useAuthentification';
 import { Weekend } from '../../../models/weekend';
 import * as RootNavigation from '../../../navigation/RootNavigation';
-import { SERVER_IP } from '@env';
+import { EXPO_PUBLIC_SERVER_IP } from '@env';
 import { useStoreActions } from '../../../state/hooks';
 import * as Haptics from 'expo-haptics';
 
@@ -28,7 +28,8 @@ const AddWeekendModal = () => {
   const handleCreate = async () => {
     try {
       console.log("create weekend")
-      const response = await fetch(SERVER_IP + '/createWeekend', {
+      console.log("SERVER IP : ", EXPO_PUBLIC_SERVER_IP);
+      const response = await fetch(EXPO_PUBLIC_SERVER_IP + '/createWeekend', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

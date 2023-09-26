@@ -10,7 +10,7 @@ import { HomeStackParamList } from '../Home';
 import { Ionicons, FontAwesome } from '@expo/vector-icons';
 import * as RootNavigation from '../../../navigation/RootNavigation';
 import { useFocusEffect } from '@react-navigation/native';
-import { SERVER_IP } from '@env'
+import { EXPO_PUBLIC_SERVER_IP } from '@env'
 import { useStoreActions, useStoreState } from '../../../state/hooks';
 import WeekendService from '../../../services/WeekendService';
 
@@ -89,58 +89,19 @@ const WeekendsListScreen = ({ route, navigation }: WeekendsListProps) => {
 
 
   const getWeekends = async () => {
-    console.log(SERVER_IP)
-    console.log("getWeekends " + SERVER_IP + '/getWeekends')
-    // const response = await fetch(SERVER_IP + '/getWeekends', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify({ user_id: user!.uid }),
-    // });
-    // console.log("getWeekends response")
-    // console.log(response)
-    // const data = await response.json();
-    const data: Weekend[] = [
-      {
-        id: 1,
-        name: "Weekend 1",
-        date_debut: "2021-05-01",
-        date_fin: "2021-05-02",
-        status: "coming",
-        address: "address",
-        participants: [
-          {
-            id: "1",
-            first_name: "User",
-            second_name: "Second",
-            email: "user@gmail.com",
-            is_present: true,
-            is_driver: false
-          },
-          {
-            id: "2",
-            first_name: "User2",
-            second_name: "Second2",
-            email: "user2@gmail.com",
-            is_present: false,
-            is_driver: false
-          },
-          {
-            id: "3",
-            first_name: "User3",
-            second_name: "Second3",
-            email: "user3@gmail.com",
-            is_present: true,
-            is_driver: true
-          },
-        ],
-        sharing_code: "sharing_code",
-        tricount_link: "tricount_link",
-        reservation_link: "reservation_link",
-        creator: "6OWwD2zOY3VpwqNcBzW0I0GNsMw1"
-      }
-    ]
+    console.log(EXPO_PUBLIC_SERVER_IP)
+    console.log("getWeekends " + EXPO_PUBLIC_SERVER_IP + '/getWeekends')
+    const response = await fetch(EXPO_PUBLIC_SERVER_IP + '/getWeekends', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ user_id: user!.uid }),
+    });
+    console.log("getWeekends response")
+    console.log(response)
+    const data = await response.json();
+    
     console.log("getWeekends data")
     setmyWeekends(data);
     setRefreshing(false);

@@ -9,7 +9,7 @@ import { useStoreActions, useStoreState } from '../../../state/hooks';
 import { ScrollView } from 'react-native-gesture-handler';
 import WeekendService from '../../../services/WeekendService';
 import { Weekend } from '../../../models/weekend';
-import { SERVER_IP } from '@env';
+import { EXPO_PUBLIC_SERVER_IP } from '@env';
 import { Snackbar } from 'react-native-paper';
 import { Feather , FontAwesome } from '@expo/vector-icons';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -50,7 +50,7 @@ const GeneralScreen = ({ route, navigation }: GeneralProps) => {
   const fetchImage = async () => {
     try {
       console.log("get image")
-      const response = await fetch(SERVER_IP + '/get_image/' + currentWeekend!.id);
+      const response = await fetch(EXPO_PUBLIC_SERVER_IP + '/get_image/' + currentWeekend!.id);
       const blob = await response.blob();
       const imageUrl = URL.createObjectURL(blob);
       setImageUrl(imageUrl);

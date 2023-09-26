@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { Weekend } from '../../models/weekend';
-import { SERVER_IP } from '@env';
+import { EXPO_PUBLIC_SERVER_IP } from '@env';
 
 const WeekendCard = (props: {weekend: Weekend, onPress: any}) => {
 
@@ -15,7 +15,7 @@ const WeekendCard = (props: {weekend: Weekend, onPress: any}) => {
   const fetchImage = async () => {
     try {
       console.log('fetching image')
-      const response = await fetch(SERVER_IP + '/get_image/' + props.weekend.id);
+      const response = await fetch(EXPO_PUBLIC_SERVER_IP + '/get_image/' + props.weekend.id);
       const blob = await response.blob();
       const imageUrl = URL.createObjectURL(blob);
       setImageUrl(imageUrl);

@@ -1,5 +1,5 @@
 declare module '@env' {
-  export const SERVER_IP: string;
+  export const EXPO_PUBLIC_SERVER_IP: string;
 
   // other ones defined in .env file
 }

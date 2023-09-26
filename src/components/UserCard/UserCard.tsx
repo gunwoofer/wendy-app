@@ -1,4 +1,4 @@
-import { SERVER_IP } from '@env';
+import { EXPO_PUBLIC_SERVER_IP } from '@env';
 import React, { useState } from 'react';
 import {Text, TouchableOpacity, StyleSheet } from 'react-native';
 import BouncyCheckbox from "react-native-bouncy-checkbox";
@@ -16,7 +16,7 @@ const UserCard = (props: {user: UserModel, weekend: Weekend}) => {
 
   const update_is_present = (user: UserModel, weekend: Weekend) => {
     const func = async (isChecked: boolean) => {
-      // const response = await fetch(`${SERVER_IP}/updateWeekendPresence/${weekend.id}`, {
+      // const response = await fetch(`${EXPO_PUBLIC_SERVER_IP}/updateWeekendPresence/${weekend.id}`, {
       //   method: 'PUT',
       //   headers: {
       //     'Content-Type': 'application/json',
