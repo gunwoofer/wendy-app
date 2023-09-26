@@ -89,8 +89,6 @@ const WeekendsListScreen = ({ route, navigation }: WeekendsListProps) => {
 
 
   const getWeekends = async () => {
-    console.log(EXPO_PUBLIC_SERVER_IP)
-    console.log("getWeekends " + EXPO_PUBLIC_SERVER_IP + '/getWeekends')
     const response = await fetch(EXPO_PUBLIC_SERVER_IP + '/getWeekends', {
       method: 'POST',
       headers: {
@@ -99,7 +97,6 @@ const WeekendsListScreen = ({ route, navigation }: WeekendsListProps) => {
       body: JSON.stringify({ user_id: user!.uid }),
     });
     console.log("getWeekends response")
-    console.log(response)
     const data = await response.json();
     
     console.log("getWeekends data")

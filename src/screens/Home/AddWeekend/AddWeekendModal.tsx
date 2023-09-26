@@ -28,7 +28,6 @@ const AddWeekendModal = () => {
   const handleCreate = async () => {
     try {
       console.log("create weekend")
-      console.log("SERVER IP : ", EXPO_PUBLIC_SERVER_IP);
       const response = await fetch(EXPO_PUBLIC_SERVER_IP + '/createWeekend', {
         method: 'POST',
         headers: {
@@ -52,7 +51,6 @@ const AddWeekendModal = () => {
 
   const handleJoin = () => {
     // Handle join logic
-    console.log('Join:', code);
     setCode('')
     setModalVisible(false);
   };
