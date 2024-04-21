@@ -3,6 +3,7 @@ import 'dotenv/config';
 export default {
   "expo": {
     "name": "wendy-app",
+    "jsEngine": "hermes",
     "slug": "wendy-app",
     "version": "1.0.0",
     "orientation": "portrait",
