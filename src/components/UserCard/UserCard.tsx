@@ -1,4 +1,3 @@
-import { EXPO_PUBLIC_SERVER_IP } from '@env';
 import React, { useState } from 'react';
 import {Text, TouchableOpacity, StyleSheet } from 'react-native';
 import BouncyCheckbox from "react-native-bouncy-checkbox";
@@ -6,8 +5,11 @@ import { UserModel } from '../../models/user';
 import { Weekend } from '../../models/weekend';
 import { User } from 'firebase/auth';
 import { useAuthentication } from '../../utils/hooks/useAuthentification';
+import { getAuth } from 'firebase/auth';
 
+const auth = getAuth();
 
+const url = 'http://192.168.0.101:3000'
 
 const UserCard = (props: {user: UserModel, weekend: Weekend}) => {
   // const {user} = useAuthentication();
@@ -16,16 +18,16 @@ const UserCard = (props: {user: UserModel, weekend: Weekend}) => {
 
   const update_is_present = (user: UserModel, weekend: Weekend) => {
     const func = async (isChecked: boolean) => {
-      // const response = await fetch(`${EXPO_PUBLIC_SERVER_IP}/updateWeekendPresence/${weekend.id}`, {
-      //   method: 'PUT',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify({
-      //     "user_id": user.id,
-      //     "is_present": isChecked
-      //   }),
-      // });
+      const response = await fetch(`${url}/updateWeekendPresence/${weekend.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          "user_id": user.id,
+          "is_present": isChecked
+        }),
+      });
       user.is_present = !user.is_present
       setChecked(!checked)
     };

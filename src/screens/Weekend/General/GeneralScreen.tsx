@@ -9,12 +9,17 @@ import { useStoreActions, useStoreState } from '../../../state/hooks';
 import { ScrollView } from 'react-native-gesture-handler';
 import WeekendService from '../../../services/WeekendService';
 import { Weekend } from '../../../models/weekend';
-import { EXPO_PUBLIC_SERVER_IP } from '@env';
 import { Snackbar } from 'react-native-paper';
 import { Feather , FontAwesome } from '@expo/vector-icons';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import * as ImagePicker from 'expo-image-picker';
+
+import { getAuth } from 'firebase/auth';
+
+const auth = getAuth();
+
+const url = 'http://192.168.0.101:3000'
 
 type GeneralScreenNavigationProp = StackNavigationProp<WeekendStackParamList, 'General'>;
 type GeneralProps = {
@@ -50,7 +55,7 @@ const GeneralScreen = ({ route, navigation }: GeneralProps) => {
   const fetchImage = async () => {
     try {
       console.log("get image")
-      const response = await fetch(EXPO_PUBLIC_SERVER_IP + '/get_image/' + currentWeekend!.id);
+      const response = await fetch(url + '/get_image/' + currentWeekend!.id);
       const blob = await response.blob();
       const imageUrl = URL.createObjectURL(blob);
       setImageUrl(imageUrl);

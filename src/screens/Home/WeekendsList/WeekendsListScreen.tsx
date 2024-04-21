@@ -10,11 +10,13 @@ import { HomeStackParamList } from '../Home';
 import { Ionicons, FontAwesome } from '@expo/vector-icons';
 import * as RootNavigation from '../../../navigation/RootNavigation';
 import { useFocusEffect } from '@react-navigation/native';
-import { EXPO_PUBLIC_SERVER_IP } from '@env'
 import { useStoreActions, useStoreState } from '../../../state/hooks';
 import WeekendService from '../../../services/WeekendService';
+import { getAuth } from 'firebase/auth';
 
+const auth = getAuth();
 
+const url = 'http://192.168.0.101:3000'
 
 type WeekendsListScreenNavigationProp = StackNavigationProp<HomeStackParamList, 'WeekendsList'>;
 type WeekendsListProps = {
@@ -89,7 +91,7 @@ const WeekendsListScreen = ({ route, navigation }: WeekendsListProps) => {
 
 
   const getWeekends = async () => {
-    const response = await fetch(EXPO_PUBLIC_SERVER_IP + '/getWeekends', {
+    const response = await fetch(url + '/getWeekends', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -100,6 +102,8 @@ const WeekendsListScreen = ({ route, navigation }: WeekendsListProps) => {
     const data = await response.json();
     
     console.log("getWeekends data")
+    console.log(user!.uid)
+    console.log(data);
     setmyWeekends(data);
     setRefreshing(false);
   }

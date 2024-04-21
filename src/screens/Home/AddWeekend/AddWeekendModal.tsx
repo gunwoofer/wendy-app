@@ -7,9 +7,13 @@ import { styles } from './AddWeekendModalStyle';
 import { useAuthentication } from '../../../utils/hooks/useAuthentification';
 import { Weekend } from '../../../models/weekend';
 import * as RootNavigation from '../../../navigation/RootNavigation';
-import { EXPO_PUBLIC_SERVER_IP } from '@env';
 import { useStoreActions } from '../../../state/hooks';
 import * as Haptics from 'expo-haptics';
+import { getAuth } from 'firebase/auth';
+
+const auth = getAuth();
+
+const url = 'http://192.168.0.101:3000'
 
 const AddWeekendModal = () => {
   const setCurrentWeekend = useStoreActions((actions) => actions.setWeekend);
@@ -28,7 +32,7 @@ const AddWeekendModal = () => {
   const handleCreate = async () => {
     try {
       console.log("create weekend")
-      const response = await fetch(EXPO_PUBLIC_SERVER_IP + '/createWeekend', {
+      const response = await fetch(url + '/createWeekend', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -49,8 +53,28 @@ const AddWeekendModal = () => {
     }
   };
 
-  const handleJoin = () => {
-    // Handle join logic
+  const handleJoin = async () => {
+    try {
+      console.log("join weekend")
+      const response = await fetch(url + '/joinWeekend', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          sharing_code: code,
+          user_id: user!.uid
+        }),
+      });
+      const weekend: Weekend = await response.json();
+      setModalVisible(false);
+      setName('')
+      setCurrentWeekend(weekend)
+      RootNavigation.navigate('Weekend')
+
+    } catch (error) {
+      console.error(error);
+    }
     setCode('')
     setModalVisible(false);
   };
