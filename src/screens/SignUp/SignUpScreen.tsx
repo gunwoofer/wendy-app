@@ -3,27 +3,52 @@ import { StyleSheet, Text, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Input, Button } from 'react-native-elements';
 import { StackScreenProps } from '@react-navigation/stack';
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { EXPO_PUBLIC_SERVER_IP } from '@env';
+import { UserModel } from '../../models/user';
 
 const auth = getAuth();
 const SignUpScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
   const [value, setValue] = React.useState({
     email: '',
     password: '',
+    firstName: '',
+    lastName: '',
     error: ''
   })
 
   async function signUp() {
-    if (value.email === '' || value.password === '') {
+    if (value.email === '' || value.password === '' || value.firstName === '' || value.lastName === '') {
       setValue({
         ...value,
-        error: 'Email and password are mandatory.'
+        error: 'Every fields are mandatory.'
       })
       return;
     }
   
     try {
       await createUserWithEmailAndPassword(auth, value.email, value.password);
+      const user = auth.currentUser;
+    
+      if (user) {
+        await updateProfile(user, {
+          displayName: `${value.firstName} ${value.lastName}`
+        });
+        const response = await fetch(EXPO_PUBLIC_SERVER_IP + '/createUser', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            uid: user.uid,
+            first_name: value.firstName,
+            second_name: value.lastName,
+            email: value.email
+          }),
+        });
+        console.log(await response.json());
+
+      }
       navigation.navigate('Sign In');
     } catch (error: any) {
       setValue({
@@ -50,6 +75,20 @@ const SignUpScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
         />
 
         <Input
+          placeholder='First Name'
+          value={value.firstName}
+          onChangeText={(text) => setValue({ ...value, firstName: text })}
+          leftIcon={<Icon name='user' size={16} />}
+        />
+
+        <Input
+          placeholder='Last Name'
+          value={value.lastName}
+          onChangeText={(text) => setValue({ ...value, lastName: text })}
+          leftIcon={<Icon name='user' size={16} />}
+        />
+
+        <Input
           placeholder='Password'
           containerStyle={styles.control}
           value={value.password}
@@ -60,6 +99,8 @@ const SignUpScreen: React.FC<StackScreenProps<any>> = ({ navigation }) => {
             size={16}
           />}
         />
+
+
 
         <Button title="Sign up" buttonStyle={styles.control} onPress={signUp} />
       </View>

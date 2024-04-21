@@ -7,7 +7,7 @@ export default {
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -19,7 +19,12 @@ export default {
     "ios": {
       "googleServicesFile": "./google-services.json",
       "supportsTablet": true,
-      "bundleIdentifier": "com.gunwoofer.wendyapp"
+      "bundleIdentifier": "com.gunwoofer.wendyapp",
+      "config": {
+        "imagePicker": {
+          "photosPermission": "The app accesses your photos to let you share them with your friends."
+        }
+      }
     },
     "android": {
       "googleServicesFile": "./google-services.json",
@@ -27,7 +32,12 @@ export default {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.gunwoofer.wendyapp"
+      "package": "com.gunwoofer.wendyapp",
+      "config": {
+        "imagePicker": {
+          "photosPermission": "The app accesses your photos to let you share them with your friends."
+        }
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -39,7 +49,8 @@ export default {
           "domain": "wendy-app.us.auth0.com",
           "customScheme": "wendy"
         }
-      ]
+      ],
+      "expo-image-picker"
     ],
     "extra": {
       firebaseApiKey: process.env.FIREBASE_API_KEY,
