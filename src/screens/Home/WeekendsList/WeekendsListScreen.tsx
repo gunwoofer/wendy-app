@@ -89,6 +89,7 @@ const WeekendsListScreen = ({ route, navigation }: WeekendsListProps) => {
 
 
   const getWeekends = async () => {
+    console.log("TEST SERVER IP : ", EXPO_PUBLIC_SERVER_IP)
     const response = await fetch(EXPO_PUBLIC_SERVER_IP + '/getWeekends', {
       method: 'POST',
       headers: {
@@ -100,6 +101,7 @@ const WeekendsListScreen = ({ route, navigation }: WeekendsListProps) => {
     const data = await response.json();
     
     console.log("getWeekends data")
+    console.log(data)
     setmyWeekends(data);
     setRefreshing(false);
   }
@@ -118,7 +120,7 @@ const WeekendsListScreen = ({ route, navigation }: WeekendsListProps) => {
       {allWeekends.length > 0 && (
         <FlatList
           data={allWeekends.sort(sortByDate)}
-          renderItem={({ item, index }) => (
+          renderItem={({ item, index }: {item: any, index: number}) => (
             <View>
               {index === 0 || allWeekends[index - 1].status !== item.status ? (
                 <View style={styles.sectionLabelContainer}>
@@ -132,58 +134,13 @@ const WeekendsListScreen = ({ route, navigation }: WeekendsListProps) => {
               <WeekendCard weekend={item} onPress={handleCardPress} />
             </View>
           )}
-          keyExtractor={(item) => item.id.toString()}
+          keyExtractor={(item: { id: { toString: () => any; }; }) => item.id.toString()}
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
         />
       )}
-      {/* Future weekends
-        {futureWeekends.length > 0 && (
-          <View>
-            <Text>Coming</Text>
-            <FlatList
-              data={futureWeekends}
-              renderItem={({ item }) => (
-                <WeekendCard weekend={item} onPress={handleCardPress} />
-              )}
-              keyExtractor={(item) => item.id.toString()}
-              refreshControl={
-                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-              }
-            />
-          </View>
-        )} */}
-
-      {/* Past weekends */}
-      {/* {pastWeekends.length > 0 && (
-          <View>
-            <Text>Past</Text>
-            <FlatList
-              data={pastWeekends}
-              renderItem={({ item }) => (
-                <WeekendCard weekend={item} onPress={handleCardPress} />
-              )}
-              keyExtractor={(item) => item.id.toString()}
-              refreshControl={
-                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-              }
-            />
-          </View>
-        )} */}
-      {/* weekends list
-        {myWeekends ? (
-        <View style={styles.container}>
-          <FlatList
-            data={myWeekends}
-            renderItem={({ item }) => (
-              <WeekendCard weekend={item} onPress={handleCardPress} />
-            )}
-            keyExtractor={(item) => item.id.toString()}
-            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}
-          />
-        </View>
-        ) : null} */}
+     
     </View>
   );
 };

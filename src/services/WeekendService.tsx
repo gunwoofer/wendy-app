@@ -41,8 +41,6 @@ const WeekendService: WeekendServiceSingleton = (function () {
 
     async function getWeekendByIdAPI(id: number): Promise<Weekend> {
       console.log("get weekend by id")
-      console.log("get weekend by id")
-      console.log("get weekend by id")
 
       const response = await fetch(EXPO_PUBLIC_SERVER_IP + '/getWeekendById/' + id, {
         method: 'GET',

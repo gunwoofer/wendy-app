@@ -17,7 +17,7 @@ export default {
       "**/*"
     ],
     "ios": {
-      "googleServicesFile": "./google-services.json",
+      "googleServicesFile": "./GoogleService-Info.plist",
       "supportsTablet": true,
       "bundleIdentifier": "com.gunwoofer.wendyapp",
       "config": {
@@ -52,7 +52,7 @@ export default {
       ],
       "expo-image-picker"
     ],
-    "extra": {
+    "extra": {  
       firebaseApiKey: process.env.FIREBASE_API_KEY,
       firebaseAuthDomain: process.env.FIREBASE_AUTH_DOMAIN,
       firebaseProjectId: process.env.FIREBASE_PROJECT_ID,

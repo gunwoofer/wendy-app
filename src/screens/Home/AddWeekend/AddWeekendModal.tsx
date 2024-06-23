@@ -49,8 +49,28 @@ const AddWeekendModal = () => {
     }
   };
 
-  const handleJoin = () => {
-    // Handle join logic
+  const handleJoin = async () => {
+    try {
+        console.log("join weekend")
+        const response = await fetch(EXPO_PUBLIC_SERVER_IP + '/joinWeekend', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            sharing_code: code,
+            user_id: user!.uid
+          }),
+        });
+        const weekendJoined: Weekend = await response.json();
+        setModalVisible(false);
+        setName('')
+        setCurrentWeekend(weekendJoined)
+        RootNavigation.navigate('Weekend')
+  
+      } catch (error) {
+        console.error(error);
+      }
     setCode('')
     setModalVisible(false);
   };
