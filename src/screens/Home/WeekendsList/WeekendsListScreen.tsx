@@ -119,7 +119,7 @@ const WeekendsListScreen = ({ route, navigation }: WeekendsListProps) => {
       {allWeekends.length > 0 && (
         <FlatList
           data={allWeekends.sort(sortByDate)}
-          renderItem={({ item, index }: { item: any; index: number }) => (
+          renderItem={({ item, index }: { item: Weekend; index: number }) => (
             <View>
               {index === 0 || allWeekends[index - 1].status !== item.status ? (
                 <View style={styles.sectionLabelContainer}>
