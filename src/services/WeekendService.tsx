@@ -103,6 +103,7 @@ const WeekendService: WeekendServiceSingleton = (function () {
     }
 
     async function getWeekends(userId: string): Promise<Weekend[]> {
+      console.log(EXPO_PUBLIC_SERVER_IP);
       const response = await fetch(EXPO_PUBLIC_SERVER_IP + "/getWeekends", {
         method: "POST",
         headers: {

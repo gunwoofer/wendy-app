@@ -1,41 +1,59 @@
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, Button, ImageStyle, RefreshControl, Clipboard } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import { styles } from './GeneralScreenStyle';
-import { WeekendStackParamList } from '../WeekendScreen';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RouteProp } from '@react-navigation/native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  Image,
+  Button,
+  ImageStyle,
+  RefreshControl,
+  Clipboard,
+} from "react-native";
+import React, { useEffect, useState } from "react";
+import { styles } from "./GeneralScreenStyle";
+import { WeekendStackParamList } from "../WeekendScreen";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { RouteProp } from "@react-navigation/native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { useStoreActions, useStoreState } from '../../../state/hooks';
-import { ScrollView } from 'react-native-gesture-handler';
-import WeekendService from '../../../services/WeekendService';
-import { Weekend } from '../../../models/weekend';
-import { EXPO_PUBLIC_SERVER_IP } from '@env';
-import { Snackbar } from 'react-native-paper';
-import { Feather , FontAwesome } from '@expo/vector-icons';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { useStoreActions, useStoreState } from "../../../state/hooks";
+import { ScrollView } from "react-native-gesture-handler";
+import WeekendService from "../../../services/WeekendService";
+import { Weekend } from "../../../models/weekend";
+import { EXPO_PUBLIC_SERVER_IP } from "@env";
+import { Snackbar } from "react-native-paper";
+import { Feather, FontAwesome } from "@expo/vector-icons";
+import Icon from "react-native-vector-icons/FontAwesome";
 
-import * as ImagePicker from 'expo-image-picker';
+import * as ImagePicker from "expo-image-picker";
 
-type GeneralScreenNavigationProp = StackNavigationProp<WeekendStackParamList, 'General'>;
+type GeneralScreenNavigationProp = StackNavigationProp<
+  WeekendStackParamList,
+  "General"
+>;
 type GeneralProps = {
   navigation: GeneralScreenNavigationProp;
-  route: RouteProp<WeekendStackParamList, 'General'>;
+  route: RouteProp<WeekendStackParamList, "General">;
 };
 
 const GeneralScreen = ({ route, navigation }: GeneralProps) => {
-
   const weekendService = WeekendService.getInstance();
-  const currentWeekend = useStoreState(state => state.currentWeekend);
+  const currentWeekend = useStoreState((state) => state.currentWeekend);
   const setCurrentWeekend = useStoreActions((actions) => actions.setWeekend);
 
   const [name, setName] = useState(currentWeekend!.name);
   const [address, setAddress] = useState(currentWeekend!.address);
-  const [tricountLink, setTricountLink] = useState(currentWeekend!.tricount_link);
-  const [reservationLink, setReservationLink] = useState(currentWeekend!.reservation_link);
-  const [dateDebut, setDateDebut] = useState(currentWeekend!.date_debut)
-  const [dateFin, setDateFin] = useState(currentWeekend!.date_fin)
+  const [tricountLink, setTricountLink] = useState(
+    currentWeekend!.tricount_link
+  );
+  const [reservationLink, setReservationLink] = useState(
+    currentWeekend!.reservation_link
+  );
+  const [dateDebut, setDateDebut] = useState(currentWeekend!.date_debut);
+  const [dateFin, setDateFin] = useState(currentWeekend!.date_fin);
 
-  const [isDatePickerDebutVisible, setDatePickerDebutVisibility] = useState(false);
+  const [isDatePickerDebutVisible, setDatePickerDebutVisibility] =
+    useState(false);
   const [isDatePickerFinVisible, setDatePickerFinVisibility] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isSnackBarVisible, setSnackBarVisible] = useState(false);
@@ -43,19 +61,27 @@ const GeneralScreen = ({ route, navigation }: GeneralProps) => {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
 
   useEffect(() => {
-    if(currentWeekend)
-      fetchImage().catch(console.error);
+    if (currentWeekend) fetchImage().catch(console.error);
   }, [currentWeekend]);
 
   const fetchImage = async () => {
     try {
-      console.log("get image")
-      const response = await fetch(EXPO_PUBLIC_SERVER_IP + '/get_image/' + currentWeekend!.id);
+      console.log("fetching image");
+      console.log(EXPO_PUBLIC_SERVER_IP);
+      const response = await fetch(
+        EXPO_PUBLIC_SERVER_IP + "/get_image/" + currentWeekend!.id
+      );
       const blob = await response.blob();
-      const imageUrl = URL.createObjectURL(blob);
-      setImageUrl(imageUrl);
-    } catch (error) {
-    }
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        if (typeof reader.result === "string") {
+          setImageUrl(reader.result);
+        } else {
+          console.error("Failed to convert blob to Base64 string");
+        }
+      };
+      reader.readAsDataURL(blob); // Converts blob to a data URL
+    } catch (error) {}
   };
 
   const pickImages = async () => {
@@ -63,12 +89,15 @@ const GeneralScreen = ({ route, navigation }: GeneralProps) => {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       quality: 1,
       base64: true,
-      allowsMultipleSelection: false
+      allowsMultipleSelection: false,
     });
 
     if (!result.canceled) {
       try {
-        weekendService.setWeekendPhoto(currentWeekend!.id, result.assets[0].base64!)
+        weekendService.setWeekendPhoto(
+          currentWeekend!.id,
+          result.assets[0].base64!
+        );
         setImageUrl(`data:image/png;base64,${result.assets[0].base64}`);
       } catch (error) {
         console.log(error);
@@ -98,18 +127,26 @@ const GeneralScreen = ({ route, navigation }: GeneralProps) => {
   };
 
   const handleConfirmDebut = (date: Date) => {
-    setDateDebut(date.toISOString().split("T")[0])
+    setDateDebut(date.toISOString().split("T")[0]);
     hideDatePickerDebut();
   };
 
   const handleConfirmFin = (date: Date) => {
-    setDateFin(date.toISOString().split("T")[0])
+    setDateFin(date.toISOString().split("T")[0]);
     hideDatePickerFin();
   };
 
   const saveReservation = async () => {
     try {
-      const weekend: Weekend = await weekendService.setWeekendAPI(currentWeekend!.id, name, address, tricountLink, reservationLink, dateDebut, dateFin)
+      const weekend: Weekend = await weekendService.setWeekendAPI(
+        currentWeekend!.id,
+        name,
+        address,
+        tricountLink,
+        reservationLink,
+        dateDebut,
+        dateFin
+      );
       setCurrentWeekend(weekend);
       setSnackBarVisible(true);
       toggleEditMode();
@@ -120,14 +157,16 @@ const GeneralScreen = ({ route, navigation }: GeneralProps) => {
 
   const handleRefresh = async () => {
     setIsRefreshing(true);
-    const updatedWeekend: Weekend = await weekendService.getWeekendByIdAPI(currentWeekend!.id);
+    const updatedWeekend: Weekend = await weekendService.getWeekendByIdAPI(
+      currentWeekend!.id
+    );
     console.log("REFRESHED SUCCESSFULL : ", updatedWeekend);
     setCurrentWeekend(updatedWeekend);
     setIsRefreshing(false);
   };
 
   const copyToClipboard = (sharing_code?: string) => {
-    if(!sharing_code) return;
+    if (!sharing_code) return;
     console.log(sharing_code);
     Clipboard.setString(sharing_code);
   };
@@ -157,7 +196,6 @@ const GeneralScreen = ({ route, navigation }: GeneralProps) => {
           />
         </View>
 
-
         {/* Tricount */}
         <View style={styles.inputFieldContainer}>
           <Text style={styles.label}>Tricount</Text>
@@ -168,7 +206,6 @@ const GeneralScreen = ({ route, navigation }: GeneralProps) => {
             onChangeText={setTricountLink}
           />
         </View>
-
 
         {/* Reservation */}
         <View style={styles.inputFieldContainer}>
@@ -198,20 +235,27 @@ const GeneralScreen = ({ route, navigation }: GeneralProps) => {
         </View>
         <View style={styles.readOnlyFieldContainer}>
           <Text style={styles.label}>Tricount:</Text>
-          <Text style={styles.readOnlyText}>{currentWeekend?.tricount_link}</Text>
+          <Text style={styles.readOnlyText}>
+            {currentWeekend?.tricount_link}
+          </Text>
         </View>
         <View style={styles.readOnlyFieldContainer}>
           <Text style={styles.label}>Airbnb:</Text>
-          <Text style={styles.readOnlyText}>{currentWeekend?.reservation_link}</Text>
+          <Text style={styles.readOnlyText}>
+            {currentWeekend?.reservation_link}
+          </Text>
         </View>
         <View style={styles.readOnlyFieldContainer}>
           <Text style={styles.label}>Code du chalet:</Text>
-          <Text style={styles.readOnlyText}>{currentWeekend?.sharing_code}</Text>
+          <Text style={styles.readOnlyText}>
+            {currentWeekend?.sharing_code}
+          </Text>
           <Icon.Button
-              name="copy"
-              style={styles.copyIcon}
-              backgroundColor="#00000000"
-              onPress={() => copyToClipboard(currentWeekend?.sharing_code)}/>
+            name="copy"
+            style={styles.copyIcon}
+            backgroundColor="#00000000"
+            onPress={() => copyToClipboard(currentWeekend?.sharing_code)}
+          />
         </View>
       </>
     );
@@ -237,35 +281,42 @@ const GeneralScreen = ({ route, navigation }: GeneralProps) => {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}
+    <ScrollView
+      contentContainerStyle={styles.container}
       refreshControl={
-        <RefreshControl
-          refreshing={isRefreshing}
-          onRefresh={handleRefresh}
-        />
+        <RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />
       }
     >
       {/* Image principale */}
       <>
         {imageUrl ? (
-          <Image source={{ uri: imageUrl, cache: 'reload', headers: {
-            Pragma: "no-cache",
-        }}} style={styles.image as ImageStyle}/>
+          <Image
+            source={{
+              uri: imageUrl,
+              cache: "reload",
+              headers: {
+                Pragma: "no-cache",
+              },
+            }}
+            style={styles.image as ImageStyle}
+          />
         ) : null}
         <TouchableOpacity style={styles.editIcon} onPress={pickImages}>
-          <Feather  name="edit" size={24} color="white" />
-        </TouchableOpacity> 
+          <Feather name="edit" size={24} color="white" />
+        </TouchableOpacity>
       </>
 
       <View style={styles.dateContainer}>
-
         {/* Date de debut */}
         <Text>Du </Text>
-        {editMode ?
-          <Button title={dateDebut || "DEBUT"} onPress={showDatePickerDebut}></Button>
-        : 
+        {editMode ? (
+          <Button
+            title={dateDebut || "DEBUT"}
+            onPress={showDatePickerDebut}
+          ></Button>
+        ) : (
           <Text style={styles.dateReadOnly}>{dateDebut || "DEBUT"}</Text>
-        }
+        )}
 
         <DateTimePickerModal
           isVisible={isDatePickerDebutVisible}
@@ -277,11 +328,11 @@ const GeneralScreen = ({ route, navigation }: GeneralProps) => {
 
         {/* Date de fin */}
         <Text> au </Text>
-        {editMode ?
+        {editMode ? (
           <Button title={dateFin || "FIN"} onPress={showDatePickerFin} />
-        : 
+        ) : (
           <Text style={styles.dateReadOnly}>{dateFin || "FIN"}</Text>
-        }
+        )}
         <DateTimePickerModal
           isVisible={isDatePickerFinVisible}
           mode="date"
@@ -301,10 +352,15 @@ const GeneralScreen = ({ route, navigation }: GeneralProps) => {
         visible={isSnackBarVisible}
         onDismiss={() => setSnackBarVisible(false)}
         duration={2500}
-        style={{ backgroundColor: 'green', marginBottom: 100 }}
+        style={{ backgroundColor: "green", marginBottom: 100 }}
       >
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <FontAwesome name="check" size={24} color="white" style={{ marginRight: 10 }} />
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <FontAwesome
+            name="check"
+            size={24}
+            color="white"
+            style={{ marginRight: 10 }}
+          />
           <Text style={{ color: "white" }}>Weekend updated !</Text>
         </View>
       </Snackbar>
